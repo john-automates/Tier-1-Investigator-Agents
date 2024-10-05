@@ -1,0 +1,22 @@
+
+    Detection Overview
+Detection ID: DETECT-2024-10-05-001
+Timestamp: 2024-10-05 14:35:27 UTC
+Severity Level: High
+Alert Source: Endpoint Security Agent v3.2.1
+Hostname: WIN-SERVER-01
+Operating System: Windows Server 2019
+Detection Method: Behavioral Analysis
+2. Incident Details
+Detection Type: Unauthorized Ransomware Activity
+Description: An anomalous process exhibiting ransomware-like behavior was detected on the host. The process attempted to encrypt multiple files across various directories, modifying file extensions and appending .encrypted to filenames. Immediate action is recommended to contain and remediate the threat.
+3. Indicators of Compromise (IOCs)
+Category	Details
+Process Name	encryptor.exe
+Process ID (PID)	4821
+Process Path	C:\Users\Public\Downloads\encryptor.exe
+Parent Process	explorer.exe (PID: 1568)
+File Hash (SHA-256)	3A7F1E2B4C5D6E7F8G9H0I1J2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8A9B0C1D
+Network Activity	Outbound connection to 192.168.100.55:443
+Registry Changes	Added entry to HKCU\Software\Microsoft\Windows\CurrentVersion\Run
+Affected Files	Multiple .docx, .xlsx, and .pptx files in C:\Users\Public\Documents

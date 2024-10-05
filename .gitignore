@@ -1,0 +1,12 @@
+# make a gitignore file to ignore the normal files for a python project
+.env
+# ignore the normal files for a python project
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+*.pyj
+*.pyjz
+myenv

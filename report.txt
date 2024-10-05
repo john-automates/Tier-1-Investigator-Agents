@@ -1,0 +1,159 @@
+
+
+--- Step 1: Detection Analysis ---
+{
+  "detection": {
+    "id": "DETECT-2024-10-05-001",
+    "timestamp": "2024-10-05T14:35:27Z",
+    "severity_level": "High",
+    "alert_source": "Endpoint Security Agent v3.2.1",
+    "hostname": "WIN-SERVER-01",
+    "operating_system": "Windows Server 2019",
+    "detection_method": "Behavioral Analysis"
+  },
+  "incident": {
+    "type": "Unauthorized Ransomware Activity",
+    "description": "An anomalous process exhibiting ransomware-like behavior was detected on the host. The process attempted to encrypt multiple files across various directories, modifying file extensions and appending .encrypted to filenames. Immediate action is recommended to contain and remediate the threat."
+  },
+  "indicators_of_compromise": {
+    "process": {
+      "name": "encryptor.exe",
+      "pid": 4821,
+      "path": "C:\\Users\\Public\\Downloads\\encryptor.exe",
+      "parent_process": {
+        "name": "explorer.exe",
+        "pid": 1568
+      }
+    },
+    "file_hash": {
+      "sha256": "3A7F1E2B4C5D6E7F8G9H0I1J2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8A9B0C1D"
+    },
+    "network_activity": {
+      "outbound_connection": {
+        "ip": "192.168.100.55",
+        "port": 443
+      }
+    },
+    "registry_changes": {
+      "added_entry": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+    },
+    "affected_files": [
+      {
+        "extension": ".docx",
+        "location": "C:\\Users\\Public\\Documents"
+      },
+      {
+        "extension": ".xlsx",
+        "location": "C:\\Users\\Public\\Documents"
+      },
+      {
+        "extension": ".pptx",
+        "location": "C:\\Users\\Public\\Documents"
+      }
+    ]
+  }
+}
+
+--- Step 2: OSINT Investigation Plan ---
+{
+  "step_1": {
+    "title": "Analyze File Hash",
+    "description": "Investigate the file hash to determine if it is associated with known malware. Search threat intelligence databases and repositories for any previous reports or analyses.",
+    "ioc": "3A7F1E2B4C5D6E7F8G9H0I1J2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8A9B0C1D",
+    "ioc_type": "File Hash",
+    "resources": [
+      {
+        "name": "VirusTotal",
+        "url": "https://www.virustotal.com/gui/home/search"
+      },
+      {
+        "name": "Hybrid Analysis",
+        "url": "https://www.hybrid-analysis.com/"
+      },
+      {
+        "name": "Malware Bazaar",
+        "url": "https://bazaar.abuse.ch/"
+      }
+    ]
+  },
+  "step_2": {
+    "title": "Investigate IP Address",
+    "description": "Check the outbound connection IP address in various threat intelligence and IP reputation sources to determine if it is associated with malicious activity.",
+    "ioc": "192.168.100.55",
+    "ioc_type": "IP Address",
+    "resources": [
+      {
+        "name": "AlienVault OTX",
+        "url": "https://otx.alienvault.com/"
+      },
+      {
+        "name": "Talos Intelligence",
+        "url": "https://talosintelligence.com/"
+      },
+      {
+        "name": "IPVoid",
+        "url": "https://www.ipvoid.com/"
+      }
+    ]
+  },
+  "step_3": {
+    "title": "Search for Process Name",
+    "description": "Look for any known information or incident reports associated with the process named 'encryptor.exe' to identify if it is linked to known ransomware attacks.",
+    "ioc": "encryptor.exe",
+    "ioc_type": "Process Name",
+    "resources": [
+      {
+        "name": "Joe Sandbox",
+        "url": "https://www.joesandbox.com/"
+      },
+      {
+        "name": "Any.Run",
+        "url": "https://app.any.run/"
+      },
+      {
+        "name": "CIRCL MISP",
+        "url": "https://www.circl.lu/services/misp-malware-information-sharing-platform/"
+      }
+    ]
+  },
+  "step_4": {
+    "title": "Check Registry Modification",
+    "description": "Search for any common attack patterns or malware behaviors that involve the registry key HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run being modified to include persistent malware.",
+    "ioc": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+    "ioc_type": "Registry Key",
+    "resources": [
+      {
+        "name": "MITRE ATT&CK",
+        "url": "https://attack.mitre.org/"
+      },
+      {
+        "name": "CARO Index",
+        "url": "https://www.caro.org/index.html"
+      },
+      {
+        "name": "BC Security - Atomic Red Team",
+        "url": "https://github.com/redcanaryco/atomic-red-team"
+      }
+    ]
+  },
+  "step_5": {
+    "title": "Research Affected File Types",
+    "description": "Assess if there is a specific ransomware strain known to target .docx, .xlsx, and .pptx files by investigating historical ransomware attack patterns.",
+    "ioc": ".docx, .xlsx, .pptx",
+    "ioc_type": "File Extension",
+    "resources": [
+      {
+        "name": "Ransomware Tracker",
+        "url": "https://ransomwaretracker.abuse.ch/"
+      },
+      {
+        "name": "ID Ransomware",
+        "url": "https://id-ransomware.malwarehunterteam.com/"
+      },
+      {
+        "name": "Cymon.io",
+        "url": "https://www.cymon.io/"
+      }
+    ]
+  }
+}

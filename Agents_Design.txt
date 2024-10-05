@@ -1,0 +1,62 @@
+
+---
+
+### **Sub-Agent Design**
+
+#### **1. File Hash Investigator**
+
+- **Purpose**: Analyze file hashes to determine associations with known malware.
+- **Tasks**:
+  - Search threat intelligence databases for the provided file hash.
+  - Compile previous reports or analyses related to the hash.
+- **Tools/Resources**:
+  - **VirusTotal**: Use the API to check the hash against a vast database of malware signatures.
+  - **Hybrid Analysis**: Submit the hash to find related malware behavior analyses.
+  - **Malware Bazaar**: Search for the hash in their repository of malware samples.
+
+#### **2. IP Address Investigator**
+
+- **Purpose**: Investigate IP addresses for links to malicious activities.
+- **Tasks**:
+  - Check the IP address in threat intelligence and IP reputation sources.
+  - Identify any known malicious activities or associations.
+- **Tools/Resources**:
+  - **AlienVault OTX**: Utilize the platform to look up the IP for threat indicators.
+  - **Talos Intelligence**: Assess the reputation and history of the IP address.
+  - **IPVoid**: Gather additional information such as geolocation and blacklist status.
+
+#### **3. Process Name Analyst**
+
+- **Purpose**: Research process names to identify links to ransomware attacks.
+- **Tasks**:
+  - Look for incident reports or malware analyses associated with "encryptor.exe."
+  - Determine if the process is linked to known ransomware families.
+- **Tools/Resources**:
+  - **Joe Sandbox**: Analyze the process in a controlled environment to observe behavior.
+  - **Any.Run**: Perform dynamic analysis to see real-time process activities.
+  - **CIRCL MISP**: Search for shared threat intelligence related to the process name.
+
+#### **4. Registry Key Analyst**
+
+- **Purpose**: Analyze registry modifications for common malware behaviors.
+- **Tasks**:
+  - Investigate if the registry key is commonly used for persistence by malware.
+  - Identify malware strains that modify this specific registry path.
+- **Tools/Resources**:
+  - **MITRE ATT&CK**: Reference techniques involving registry modifications for persistence.
+  - **CARO Index**: Look up malware classifications and naming conventions.
+  - **Atomic Red Team**: Use tests to simulate registry modifications and study effects.
+
+#### **5. Ransomware Researcher**
+
+- **Purpose**: Identify ransomware strains targeting specific file extensions.
+- **Tasks**:
+  - Research historical attack patterns involving .docx, .xlsx, and .pptx files.
+  - Determine specific ransomware families known for encrypting these file types.
+- **Tools/Resources**:
+  - **Ransomware Tracker**: Monitor active ransomware campaigns and their characteristics.
+  - **ID Ransomware**: Input encrypted file samples to identify ransomware types.
+  - **Cymon.io**: Aggregate threat intelligence data for broader context.
+
+---
+
