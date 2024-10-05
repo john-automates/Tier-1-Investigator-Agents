@@ -10,7 +10,7 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def create_ip_address_investigator():
     """
-    Create an IP Address Investigator assistant with fake tools for demonstration.
+    Create an IP Address Investigator assistant with Shodan tools.
     """
     try:
         assistant = client.beta.assistants.create(
@@ -19,41 +19,46 @@ def create_ip_address_investigator():
             You are an IP Address Investigator specialized in OSINT techniques. 
             Your role is to investigate IP addresses using various online tools and resources.
             When given an IP address, use your tools to gather information and provide a detailed report.
+            Always use the check_ip_reputation and get_geolocation tools to get information about an IP address.
+            Analyze the results and provide insights about the potential risks associated with the IP.
             """,
             model="gpt-4-turbo-preview",
-            tools=[{
-                "type": "function",
-                "function": {
-                    "name": "check_ip_reputation",
-                    "description": "Check the reputation of an IP address",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "ip_address": {
-                                "type": "string",
-                                "description": "The IP address to investigate"
-                            }
-                        },
-                        "required": ["ip_address"]
+            tools=[
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "check_ip_reputation",
+                        "description": "Check the reputation of an IP address using Shodan",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "ip_address": {
+                                    "type": "string",
+                                    "description": "The IP address to investigate"
+                                }
+                            },
+                            "required": ["ip_address"]
+                        }
+                    }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "get_geolocation",
+                        "description": "Get the geolocation information for an IP address using Shodan",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "ip_address": {
+                                    "type": "string",
+                                    "description": "The IP address to geolocate"
+                                }
+                            },
+                            "required": ["ip_address"]
+                        }
                     }
                 }
-            }, {
-                "type": "function",
-                "function": {
-                    "name": "get_geolocation",
-                    "description": "Get the geolocation information for an IP address",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "ip_address": {
-                                "type": "string",
-                                "description": "The IP address to geolocate"
-                            }
-                        },
-                        "required": ["ip_address"]
-                    }
-                }
-            }]
+            ]
         )
         return assistant
     except Exception as e:

@@ -3,68 +3,61 @@
 --- Step 1: Detection Analysis ---
 {
   "detection": {
-    "id": "DETECT-2024-10-05-001",
+    "detection_id": "DETECT-2024-10-05-001",
     "timestamp": "2024-10-05T14:35:27Z",
     "severity_level": "High",
     "alert_source": "Endpoint Security Agent v3.2.1",
     "hostname": "WIN-SERVER-01",
     "operating_system": "Windows Server 2019",
-    "detection_method": "Behavioral Analysis"
-  },
-  "incident": {
-    "type": "Unauthorized Ransomware Activity",
-    "description": "An anomalous process exhibiting ransomware-like behavior was detected on the host. The process attempted to encrypt multiple files across various directories, modifying file extensions and appending .encrypted to filenames. Immediate action is recommended to contain and remediate the threat."
-  },
-  "indicators_of_compromise": {
-    "process": {
-      "name": "encryptor.exe",
-      "pid": 4821,
-      "path": "C:\\Users\\Public\\Downloads\\encryptor.exe",
+    "detection_method": "Behavioral Analysis",
+    "incident_details": {
+      "detection_type": "Unauthorized Ransomware Activity",
+      "description": "An anomalous process exhibiting ransomware-like behavior was detected on the host. The process attempted to encrypt multiple files across various directories, modifying file extensions and appending .encrypted to filenames. Immediate action is recommended to contain and remediate the threat."
+    },
+    "indicators_of_compromise": {
+      "process_name": "encryptor.exe",
+      "process_id": 4821,
+      "process_path": "C:\\Users\\Public\\Downloads\\encryptor.exe",
       "parent_process": {
         "name": "explorer.exe",
         "pid": 1568
-      }
-    },
-    "file_hash": {
-      "sha256": "3A7F1E2B4C5D6E7F8G9H0I1J2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8A9B0C1D"
-    },
-    "network_activity": {
-      "outbound_connection": {
-        "ip": "192.168.100.55",
-        "port": 443
-      }
-    },
-    "registry_changes": {
-      "added_entry": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
-    },
-    "affected_files": [
-      {
-        "extension": ".docx",
-        "location": "C:\\Users\\Public\\Documents"
       },
-      {
-        "extension": ".xlsx",
-        "location": "C:\\Users\\Public\\Documents"
+      "file_hash": {
+        "sha256": "3A7F1E2B4C5D6E7F8G9H0I1J2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8A9B0C1D"
       },
-      {
-        "extension": ".pptx",
-        "location": "C:\\Users\\Public\\Documents"
-      }
-    ]
+      "network_activity": {
+        "outbound_connection": {
+          "ip": "13.224.189.18",
+          "port": 443
+        }
+      },
+      "registry_changes": [
+        {
+          "key": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+          "action": "added"
+        }
+      ],
+      "affected_files": [
+        ".docx",
+        ".xlsx",
+        ".pptx"
+      ],
+      "affected_directory": "C:\\Users\\Public\\Documents"
+    }
   }
 }
 
 --- Step 2: OSINT Investigation Plan ---
 {
   "step_1": {
-    "title": "Analyze File Hash",
-    "description": "Investigate the file hash to determine if it is associated with known malware. Search threat intelligence databases and repositories for any previous reports or analyses.",
+    "title": "Analyze File Hash in Threat Intelligence Databases",
+    "description": "Search the provided file hash in public threat intelligence databases to identify if the file has been reported as malicious and gather additional information on its behavior and associated campaigns.",
     "ioc": "3A7F1E2B4C5D6E7F8G9H0I1J2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8A9B0C1D",
     "ioc_type": "File Hash",
     "resources": [
       {
         "name": "VirusTotal",
-        "url": "https://www.virustotal.com/gui/home/search"
+        "url": "https://www.virustotal.com/"
       },
       {
         "name": "Hybrid Analysis",
@@ -77,9 +70,9 @@
     ]
   },
   "step_2": {
-    "title": "Investigate IP Address",
-    "description": "Check the outbound connection IP address in various threat intelligence and IP reputation sources to determine if it is associated with malicious activity.",
-    "ioc": "192.168.100.55",
+    "title": "Investigate the IP Address for Known Malicious Activity",
+    "description": "Investigate the outbound IP address to determine if it is associated with known malicious activities such as hosting ransomware C2 servers or other cyber threats.",
+    "ioc": "13.224.189.18",
     "ioc_type": "IP Address",
     "resources": [
       {
@@ -91,34 +84,34 @@
         "url": "https://talosintelligence.com/"
       },
       {
-        "name": "IPVoid",
-        "url": "https://www.ipvoid.com/"
+        "name": "AbuseIPDB",
+        "url": "https://www.abuseipdb.com/"
       }
     ]
   },
   "step_3": {
-    "title": "Search for Process Name",
-    "description": "Look for any known information or incident reports associated with the process named 'encryptor.exe' to identify if it is linked to known ransomware attacks.",
+    "title": "Research Process Names in Public Repositories",
+    "description": "Search for the process name 'encryptor.exe' in public repositories to find references in malware analysis reports, user forums, or security blogs.",
     "ioc": "encryptor.exe",
     "ioc_type": "Process Name",
     "resources": [
       {
-        "name": "Joe Sandbox",
-        "url": "https://www.joesandbox.com/"
+        "name": "GitHub",
+        "url": "https://github.com/"
       },
       {
-        "name": "Any.Run",
-        "url": "https://app.any.run/"
+        "name": "BleepingComputer Forums",
+        "url": "https://www.bleepingcomputer.com/forums/"
       },
       {
-        "name": "CIRCL MISP",
-        "url": "https://www.circl.lu/services/misp-malware-information-sharing-platform/"
+        "name": "Malwarebytes Labs",
+        "url": "https://blog.malwarebytes.com/"
       }
     ]
   },
   "step_4": {
-    "title": "Check Registry Modification",
-    "description": "Search for any common attack patterns or malware behaviors that involve the registry key HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run being modified to include persistent malware.",
+    "title": "Search for Registry Key Changes Related to Ransomware",
+    "description": "Investigate the registry key modification to determine if it is a common tactic used by ransomware for persistence in the Windows operating system.",
     "ioc": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
     "ioc_type": "Registry Key",
     "resources": [
@@ -127,33 +120,116 @@
         "url": "https://attack.mitre.org/"
       },
       {
-        "name": "CARO Index",
-        "url": "https://www.caro.org/index.html"
+        "name": "Capec",
+        "url": "https://capec.mitre.org/"
       },
       {
-        "name": "BC Security - Atomic Red Team",
-        "url": "https://github.com/redcanaryco/atomic-red-team"
+        "name": "Sysinternals Autoruns",
+        "url": "https://docs.microsoft.com/en-us/sysinternals/downloads/autoruns"
       }
     ]
   },
   "step_5": {
-    "title": "Research Affected File Types",
-    "description": "Assess if there is a specific ransomware strain known to target .docx, .xlsx, and .pptx files by investigating historical ransomware attack patterns.",
+    "title": "Gather Context on Affected File Types in Ransomware Attacks",
+    "description": "Research typical ransomware attacks that target specific file types such as .docx, .xlsx, and .pptx to identify common ransomware strains and tactics.",
     "ioc": ".docx, .xlsx, .pptx",
-    "ioc_type": "File Extension",
+    "ioc_type": "Affected File Types",
     "resources": [
       {
-        "name": "Ransomware Tracker",
-        "url": "https://ransomwaretracker.abuse.ch/"
+        "name": "No More Ransom Project",
+        "url": "https://www.nomoreransom.org/"
       },
       {
-        "name": "ID Ransomware",
-        "url": "https://id-ransomware.malwarehunterteam.com/"
-      },
-      {
-        "name": "Cymon.io",
-        "url": "https://www.cymon.io/"
+        "name": "Kaspersky Threat Intelligence Portal",
+        "url": "https://opentip.kaspersky.com/"
       }
     ]
+  }
+}
+
+--- Step 3: Investigation Results ---
+{
+  "investigation_results": {
+    "step_1": {
+      "title": "Analyze File Hash in Threat Intelligence Databases",
+      "description": "Search the provided file hash in public threat intelligence databases to identify if the file has been reported as malicious and gather additional information on its behavior and associated campaigns.",
+      "ioc": "3A7F1E2B4C5D6E7F8G9H0I1J2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8A9B0C1D",
+      "ioc_type": "File Hash",
+      "results": {
+        "VirusTotal": {},
+        "Hybrid Analysis": {},
+        "Malware Bazaar": {}
+      }
+    },
+    "step_2": {
+      "title": "Investigate the IP Address for Known Malicious Activity",
+      "description": "Investigate the outbound IP address to determine if it is associated with known malicious activities such as hosting ransomware C2 servers or other cyber threats.",
+      "ioc": "13.224.189.18",
+      "ioc_type": "IP Address",
+      "results": {
+        "reputation": {
+          "ip": "13.224.189.18",
+          "organization": "Amazon.com, Inc.",
+          "country": "Germany",
+          "city": "M\u00f6rfelden-Walldorf",
+          "open_ports": [
+            80,
+            443
+          ],
+          "vulns": [],
+          "last_update": "2024-10-05T03:49:15.499105",
+          "hostnames": [
+            "server-13-224-189-18.fra2.r.cloudfront.net"
+          ],
+          "domains": [
+            "cloudfront.net"
+          ],
+          "reputation": "Low Risk"
+        },
+        "geolocation": {
+          "ip": "13.224.189.18",
+          "country": "Germany",
+          "country_code": "DE",
+          "city": "M\u00f6rfelden-Walldorf",
+          "region_code": "HE",
+          "latitude": 49.99472,
+          "longitude": 8.58361,
+          "isp": "Amazon.com, Inc.",
+          "asn": "AS16509"
+        }
+      }
+    },
+    "step_3": {
+      "title": "Research Process Names in Public Repositories",
+      "description": "Search for the process name 'encryptor.exe' in public repositories to find references in malware analysis reports, user forums, or security blogs.",
+      "ioc": "encryptor.exe",
+      "ioc_type": "Process Name",
+      "results": {
+        "GitHub": {},
+        "BleepingComputer Forums": {},
+        "Malwarebytes Labs": {}
+      }
+    },
+    "step_4": {
+      "title": "Search for Registry Key Changes Related to Ransomware",
+      "description": "Investigate the registry key modification to determine if it is a common tactic used by ransomware for persistence in the Windows operating system.",
+      "ioc": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+      "ioc_type": "Registry Key",
+      "results": {
+        "MITRE ATT&CK": {},
+        "Capec": {},
+        "Sysinternals Autoruns": {}
+      }
+    },
+    "step_5": {
+      "title": "Gather Context on Affected File Types in Ransomware Attacks",
+      "description": "Research typical ransomware attacks that target specific file types such as .docx, .xlsx, and .pptx to identify common ransomware strains and tactics.",
+      "ioc": ".docx, .xlsx, .pptx",
+      "ioc_type": "Affected File Types",
+      "results": {
+        "No More Ransom Project": {},
+        "Kaspersky Threat Intelligence Portal": {}
+      }
+    }
   }
 }

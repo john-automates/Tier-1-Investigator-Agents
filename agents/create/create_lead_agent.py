@@ -21,29 +21,31 @@ def create_lead_agent():
             and provide a comprehensive analysis of the investigation results.
             
             You have access to the following specialized assistants:
-            1. IP Address Investigator
+            1. IP Address Investigator (via the investigate_ip_address function)
             
             Use these assistants when needed to gather detailed information about specific IOCs.
             Synthesize the information from all sources to create a cohesive investigation report.
             """,
             model="gpt-4-turbo-preview",
-            tools=[{
-                "type": "function",
-                "function": {
-                    "name": "investigate_ip_address",
-                    "description": "Delegate IP address investigation to the IP Address Investigator",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "ip_address": {
-                                "type": "string",
-                                "description": "The IP address to investigate"
-                            }
-                        },
-                        "required": ["ip_address"]
+            tools=[
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "investigate_ip_address",
+                        "description": "Delegate IP address investigation to the IP Address Investigator",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "ip_address": {
+                                    "type": "string",
+                                    "description": "The IP address to investigate"
+                                }
+                            },
+                            "required": ["ip_address"]
+                        }
                     }
                 }
-            }]
+            ]
         )
         return assistant
     except Exception as e:
