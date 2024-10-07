@@ -16,7 +16,7 @@ Process Name	encryptor.exe
 Process ID (PID)	4821
 Process Path	C:\Users\Public\Downloads\encryptor.exe
 Parent Process	explorer.exe (PID: 1568)
-File Hash (SHA-256)	3A7F1E2B4C5D6E7F8G9H0I1J2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8A9B0C1D
+File Hash	44d88612fea8a8f36de82e1278abb02f
 Network Activity	Outbound connection to 13.224.189.18:443
 Registry Changes	Added entry to HKCU\Software\Microsoft\Windows\CurrentVersion\Run
 Affected Files	Multiple .docx, .xlsx, and .pptx files in C:\Users\Public\Documents

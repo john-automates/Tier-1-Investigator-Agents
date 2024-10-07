@@ -6,6 +6,7 @@ from openai import OpenAI
 from typing import Dict, Any
 from dotenv import load_dotenv
 from tools.ip_address_investigator.ip_shodan import check_ip_reputation, get_geolocation
+from tools.file_hash_investigator.hash_virustotal import get_virustotal_report  # Corrected import
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -20,6 +21,7 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 # Get assistant IDs from environment variables
 LEAD_ASSISTANT_ID = os.getenv("LEAD_ASSISTANT_ID")
 IP_INVESTIGATOR_ID = os.getenv("IP_INVESTIGATOR_ID")
+FILE_HASH_INVESTIGATOR_ID = os.getenv("FILE_HASH_INVESTIGATOR_ID")  # Load new assistant ID
 
 def create_thread():
     """Create a new thread for the investigation."""
@@ -49,71 +51,99 @@ def get_messages(thread_id: str):
     """Get messages from the thread."""
     return client.beta.threads.messages.list(thread_id=thread_id)
 
-def investigate_ip_address(ip_address: str) -> str:
-    """Use the IP Address Investigator's tools to investigate an IP address."""
+def get_virustotal_report_handler(file_hash: str) -> str:
+    """
+    Fetch the VirusTotal report for a given file hash using the File Hash Investigator's tools.
+    """
+    try:
+        report = get_virustotal_report(file_hash)
+        return json.dumps(report)
+    except Exception as e:
+        logger.error(f"Error fetching VirusTotal report for {file_hash}: {e}")
+        return json.dumps({"error": str(e)})
+
+def handle_investigate_ip_address(arguments: Dict[str, Any], tool_call_id: str) -> str:
+    """
+    Handle the 'investigate_ip_address' function call.
+    """
+    ip_address = arguments.get("ip_address")
+    if not ip_address:
+        logger.error(f"No 'ip_address' provided for tool call ID: {tool_call_id}")
+        return json.dumps({"error": "Missing 'ip_address' argument."})
+    
+    logger.info(f"Investigating IP address: {ip_address}")
     reputation_data = check_ip_reputation(ip_address)
     geolocation_data = get_geolocation(ip_address)
-    
     combined_result = {
         "reputation": reputation_data,
         "geolocation": geolocation_data
     }
-    
+    logger.info(f"Combined IP result: {combined_result}")
     return json.dumps(combined_result)
 
+def handle_get_virustotal_report(arguments: Dict[str, Any], tool_call_id: str) -> str:
+    """
+    Handle the 'get_virustotal_report' function call.
+    """
+    file_hash = arguments.get("file_hash")
+    if not file_hash:
+        logger.error(f"No 'file_hash' provided for tool call ID: {tool_call_id}")
+        return json.dumps({"error": "Missing 'file_hash' argument."})
+    
+    logger.info(f"Fetching VirusTotal report for file hash: {file_hash}")
+    report = get_virustotal_report_handler(file_hash)
+    logger.info(f"VirusTotal report: {report}")
+    return report
+
+# Define a mapping between function names and their handlers
+FUNCTION_HANDLERS = {
+    "investigate_ip_address": handle_investigate_ip_address,
+    "get_virustotal_report": handle_get_virustotal_report
+}
+
 def handle_tool_calls(thread_id: str, run_id: str, tool_calls):
-    """Handle multiple tool calls."""
+    """
+    Handle multiple tool calls by delegating them to the appropriate handlers.
+    """
     tool_outputs = []
     for tool_call in tool_calls:
         function_name = tool_call.function.name
         arguments = json.loads(tool_call.function.arguments)
-        logger.info(f"Handling tool call: {function_name} with arguments {arguments}")
-        
-        if function_name == "investigate_ip_address":
-            ip_address = arguments["ip_address"]
-            logger.info(f"Investigating IP address: {ip_address}")
-            reputation_data = check_ip_reputation(ip_address)
-            geolocation_data = get_geolocation(ip_address)
-            combined_result = {
-                "reputation": reputation_data,
-                "geolocation": geolocation_data
-            }
-            tool_outputs.append({
-                "tool_call_id": tool_call.id,
-                "output": json.dumps(combined_result)
-            })
-            logger.info(f"Combined result: {combined_result}")
-        
-        elif function_name == "check_ip_reputation":
-            ip_address = arguments["ip_address"]
-            logger.info(f"Checking reputation for IP address: {ip_address}")
-            reputation_data = check_ip_reputation(ip_address)
-            tool_outputs.append({
-                "tool_call_id": tool_call.id,
-                "output": json.dumps(reputation_data)
-            })
-            logger.info(f"Reputation data: {reputation_data}")
-        
-        elif function_name == "get_geolocation":
-            ip_address = arguments["ip_address"]
-            logger.info(f"Getting geolocation for IP address: {ip_address}")
-            geolocation_data = get_geolocation(ip_address)
-            tool_outputs.append({
-                "tool_call_id": tool_call.id,
-                "output": json.dumps(geolocation_data)
-            })
-            logger.info(f"Geolocation data: {geolocation_data}")
-        
+        tool_call_id = tool_call.id
+        logger.info(f"Received tool call: {function_name} with ID: {tool_call_id} and arguments: {arguments}")
+
+        handler = FUNCTION_HANDLERS.get(function_name)
+        if handler:
+            try:
+                output = handler(arguments, tool_call_id)
+                tool_outputs.append({
+                    "tool_call_id": tool_call_id,
+                    "output": output
+                })
+            except Exception as e:
+                logger.error(f"Error handling tool call '{function_name}' with ID '{tool_call_id}': {e}")
+                tool_outputs.append({
+                    "tool_call_id": tool_call_id,
+                    "output": json.dumps({"error": str(e)})
+                })
         else:
-            logger.warning(f"Unknown function call: {function_name}")
-    
+            logger.warning(f"Unknown function call: {function_name} for tool call ID: {tool_call_id}")
+            tool_outputs.append({
+                "tool_call_id": tool_call_id,
+                "output": json.dumps({"error": f"Unknown function '{function_name}'."})
+            })
+
     if tool_outputs:
         logger.info(f"Submitting tool outputs: {tool_outputs}")
-        client.beta.threads.runs.submit_tool_outputs(
-            thread_id=thread_id,
-            run_id=run_id,
-            tool_outputs=tool_outputs
-        )
+        try:
+            client.beta.threads.runs.submit_tool_outputs(
+                thread_id=thread_id,
+                run_id=run_id,
+                tool_outputs=tool_outputs
+            )
+            logger.info("Tool outputs submitted successfully.")
+        except Exception as e:
+            logger.error(f"Failed to submit tool outputs: {e}")
 
 def step_3(investigation_plan: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -129,7 +159,9 @@ def step_3(investigation_plan: Dict[str, Any]) -> Dict[str, Any]:
     add_message_to_thread(thread.id, f"Here's the investigation plan: {json.dumps(investigation_plan, indent=2)}")
     add_message_to_thread(
         thread.id,
-        "Please coordinate the investigation based on this plan and provide the results in JSON format. For steps with IOC type 'IP Address', use the investigate_ip_address function to delegate to the IP Address Investigator."
+        ("Please coordinate the investigation based on this plan and provide the results in JSON format. "
+         "For steps with IOC type 'IP Address', use the investigate_ip_address function to delegate to the IP Address Investigator. "
+         "For steps with IOC type 'File Hash', use the get_virustotal_report function to delegate to the File Hash Investigator.")
     )
     logger.info("Added investigation plan and instructions to thread.")
 
@@ -188,16 +220,3 @@ def step_3(investigation_plan: Dict[str, Any]) -> Dict[str, Any]:
                 break
 
     return investigation_results
-
-
-if __name__ == "__main__":
-    # For testing purposes
-    sample_investigation_plan = {
-        "step_1": {
-            "title": "Investigate IP Address",
-            "ioc": "192.168.100.55",
-            "ioc_type": "IP Address"
-        }
-    }
-    results = step_3(sample_investigation_plan)
-    print(json.dumps(results, indent=2))

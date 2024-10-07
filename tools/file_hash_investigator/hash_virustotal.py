@@ -41,7 +41,7 @@ def get_virustotal_report(file_hash):
             "sha1": attributes.get("sha1"),
             "sha256": attributes.get("sha256"),
         }
-
+        print(f"VirusTotal report: {result}")
         return result
     except requests.exceptions.RequestException as e:
         return {"error": f"Error fetching VirusTotal report: {str(e)}"}
