@@ -20,7 +20,7 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 # Get assistant IDs from environment variables
 LEAD_ASSISTANT_ID = os.getenv("LEAD_ASSISTANT_ID")
-IP_INVESTIGATOR_ID = os.getenv("IP_INVESTIGATOR_ID")
+IP_INVESTIGATOR_ID = os.getenv("TIER1_ASSISTANT_ID")
 FILE_HASH_INVESTIGATOR_ID = os.getenv("FILE_HASH_INVESTIGATOR_ID")  # Load new assistant ID
 
 def create_thread():

@@ -2,148 +2,153 @@
 
 --- Step 1: Detection Analysis ---
 {
-  "detection_overview": {
+  "detection": {
     "detection_id": "DETECT-2024-10-05-001",
     "timestamp": "2024-10-05T14:35:27Z",
     "severity_level": "High",
     "alert_source": "Endpoint Security Agent v3.2.1",
     "hostname": "WIN-SERVER-01",
     "operating_system": "Windows Server 2019",
-    "detection_method": "Behavioral Analysis"
-  },
-  "incident_details": {
-    "detection_type": "Unauthorized Ransomware Activity",
-    "description": "An anomalous process exhibiting ransomware-like behavior was detected on the host. The process attempted to encrypt multiple files across various directories, modifying file extensions and appending .encrypted to filenames. Immediate action is recommended to contain and remediate the threat."
-  },
-  "indicators_of_compromise": {
-    "process": {
-      "name": "encryptor.exe",
-      "pid": 4821,
-      "path": "C:\\Users\\Public\\Downloads\\encryptor.exe",
+    "detection_method": "Behavioral Analysis",
+    "incident_details": {
+      "detection_type": "Unauthorized Ransomware Activity",
+      "description": "An anomalous process exhibiting ransomware-like behavior was detected on the host. The process attempted to encrypt multiple files across various directories, modifying file extensions and appending .encrypted to filenames. Immediate action is recommended to contain and remediate the threat."
+    },
+    "indicators_of_compromise": {
+      "process_name": "encryptor.exe",
+      "process_id": 4821,
+      "process_path": "C:\\Users\\Public\\Downloads\\encryptor.exe",
       "parent_process": {
         "name": "explorer.exe",
         "pid": 1568
-      }
-    },
-    "file_hash": "44d88612fea8a8f36de82e1278abb02f",
-    "network_activity": {
-      "outbound_connection": "13.224.189.18:443"
-    },
-    "registry_changes": {
-      "added_entry": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
-    },
-    "affected_files": [
-      {
-        "extension": ".docx",
-        "location": "C:\\Users\\Public\\Documents"
       },
-      {
-        "extension": ".xlsx",
-        "location": "C:\\Users\\Public\\Documents"
+      "file_hash": "44d88612fea8a8f36de82e1278abb02f",
+      "network_activity": {
+        "outbound_connection": {
+          "ip": "13.224.189.18",
+          "port": 443
+        }
       },
-      {
-        "extension": ".pptx",
-        "location": "C:\\Users\\Public\\Documents"
-      }
-    ]
+      "registry_changes": {
+        "added_entry": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+      },
+      "affected_files": [
+        {
+          "file_type": ".docx",
+          "location": "C:\\Users\\Public\\Documents"
+        },
+        {
+          "file_type": ".xlsx",
+          "location": "C:\\Users\\Public\\Documents"
+        },
+        {
+          "file_type": ".pptx",
+          "location": "C:\\Users\\Public\\Documents"
+        }
+      ]
+    }
   }
 }
 
 --- Step 2: OSINT Investigation Plan ---
 {
   "step_1": {
-    "title": "Analyze File Hash",
-    "description": "Search for the file hash in public malware databases to identify known malware or ransomware.",
+    "title": "Analyze the File Hash",
+    "description": "Investigate the file hash '44d88612fea8a8f36de82e1278abb02f' in threat intelligence databases to determine if it is associated with known ransomware.",
     "ioc": "44d88612fea8a8f36de82e1278abb02f",
     "ioc_type": "File Hash",
     "resources": [
       {
         "name": "VirusTotal",
-        "url": "https://www.virustotal.com/gui/search/44d88612fea8a8f36de82e1278abb02f"
+        "url": "https://www.virustotal.com/"
+      },
+      {
+        "name": "MalwareBazaar",
+        "url": "https://bazaar.abuse.ch/"
       },
       {
         "name": "Hybrid Analysis",
-        "url": "https://www.hybrid-analysis.com/sample-search?search=44d88612fea8a8f36de82e1278abb02f"
-      },
-      {
-        "name": "Malwr",
-        "url": "https://malwr.com/analysis/"
+        "url": "https://www.hybrid-analysis.com/"
       }
     ]
   },
   "step_2": {
-    "title": "Investigate Outbound IP Address",
-    "description": "Check the outbound IP address for its reputation and history in cyber threat intelligence resources.",
-    "ioc": "13.224.189.18:443",
+    "title": "Investigate the IP Address",
+    "description": "Gather information on the outbound IP address '13.224.189.18' to identify any malicious activity or association with known command and control servers.",
+    "ioc": "13.224.189.18",
     "ioc_type": "IP Address",
     "resources": [
       {
-        "name": "AlienVault OTX",
-        "url": "https://otx.alienvault.com/indicator/ip/13.224.189.18"
+        "name": "IPinfo.io",
+        "url": "https://ipinfo.io/"
       },
       {
         "name": "Talos Intelligence",
-        "url": "https://talosintelligence.com/reputation_center/lookup?search=13.224.189.18"
+        "url": "https://talosintelligence.com/"
       },
       {
-        "name": "AbuseIPDB",
-        "url": "https://www.abuseipdb.com/check/13.224.189.18"
+        "name": "AlienVault OTX",
+        "url": "https://otx.alienvault.com/"
       }
     ]
   },
   "step_3": {
-    "title": "Research Process Name",
-    "description": "Research the process name in cybersecurity forums and databases to understand if it's associated with known ransomware.",
+    "title": "Look Up the Process Name",
+    "description": "Search for the process name 'encryptor.exe' in public databases to find any reports or discussions related to this executable being used in ransomware attacks.",
     "ioc": "encryptor.exe",
     "ioc_type": "Process Name",
     "resources": [
       {
-        "name": "BleepingComputer",
-        "url": "https://www.bleepingcomputer.com/"
+        "name": "VirusTotal",
+        "url": "https://www.virustotal.com/"
       },
       {
-        "name": "Reddit - r/netsec",
-        "url": "https://www.reddit.com/r/netsec/"
+        "name": "ThreatCrowd",
+        "url": "https://www.threatcrowd.org/"
       },
       {
-        "name": "Malwarebytes Forums",
-        "url": "https://forums.malwarebytes.com/"
+        "name": "Any.Run",
+        "url": "https://any.run/"
       }
     ]
   },
   "step_4": {
-    "title": "Check Registry Changes",
-    "description": "Investigate the registry change for persistence techniques associated with ransomware.",
+    "title": "Search for Registry Changes",
+    "description": "Investigate registry change entry 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' to determine if similar methods have been used by known ransomware families to maintain persistence.",
     "ioc": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
     "ioc_type": "Registry Entry",
     "resources": [
       {
-        "name": "OSForensics Registry",
-        "url": "https://www.osforensics.com/tools/windows-registry.html"
+        "name": "Reddit - r/Malware",
+        "url": "https://www.reddit.com/r/Malware/"
       },
       {
-        "name": "Windows Registry Hives",
-        "url": "https://www.hive-registry.com/"
+        "name": "Bleeping Computer Forums",
+        "url": "https://www.bleepingcomputer.com/forums/"
+      },
+      {
+        "name": "Stack Exchange Information Security",
+        "url": "https://security.stackexchange.com/"
       }
     ]
   },
   "step_5": {
-    "title": "Gather Threat Intelligence",
-    "description": "Search comprehensive threat intelligence platforms for reports related to identified IOCs.",
-    "ioc": "Multiple IOCs",
-    "ioc_type": "Various",
+    "title": "Research Affected File Types",
+    "description": "Review publicly available information and reports on ransomware incidents involving file types like '.docx', '.xlsx', and '.pptx' being encrypted.",
+    "ioc": ".docx, .xlsx, .pptx",
+    "ioc_type": "File Type",
     "resources": [
       {
-        "name": "Recorded Future",
-        "url": "https://www.recordedfuture.com/"
+        "name": "No More Ransom",
+        "url": "https://www.nomoreransom.org/"
       },
       {
-        "name": "FireEye Threat Intelligence",
-        "url": "https://www.fireeye.com/solutions/cyber-threat-intelligence.html"
+        "name": "The DFIR Report",
+        "url": "https://thedfirreport.com/"
       },
       {
-        "name": "ThreatConnect",
-        "url": "https://www.threatconnect.com/"
+        "name": "Cyber Threat Alliance",
+        "url": "https://www.cyberthreatalliance.org/"
       }
     ]
   }
@@ -151,30 +156,30 @@
 
 --- Step 3: Investigation Results ---
 {
-  "investigation_results": {
-    "step_1": {
-      "title": "Analyze File Hash",
-      "description": "Search for the file hash in public malware databases to identify known malware or ransomware.",
-      "ioc": "44d88612fea8a8f36de82e1278abb02f",
-      "ioc_type": "File Hash",
-      "virustotal_report": {
-        "scan_date": 1728335244,
-        "total_scans": 76,
-        "malicious": 65,
-        "suspicious": 0,
-        "undetected": 4,
-        "file_type": "VBA",
-        "file_size": 68,
-        "md5": "44d88612fea8a8f36de82e1278abb02f",
-        "sha1": "3395856ce81f2b7382dee72602f798b642f14140",
-        "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
-      }
-    },
-    "step_2": {
-      "title": "Investigate Outbound IP Address",
-      "description": "Check the outbound IP address for its reputation and history in cyber threat intelligence resources.",
-      "ioc": "13.224.189.18:443",
-      "ioc_type": "IP Address",
+  "step_1": {
+    "title": "Analyze the File Hash",
+    "description": "Investigate the file hash '44d88612fea8a8f36de82e1278abb02f' in threat intelligence databases to determine if it is associated with known ransomware.",
+    "ioc": "44d88612fea8a8f36de82e1278abb02f",
+    "ioc_type": "File Hash",
+    "results": {
+      "scan_date": 1728386276,
+      "total_scans": 77,
+      "malicious": 65,
+      "suspicious": 0,
+      "undetected": 5,
+      "file_type": "VBA",
+      "file_size": 68,
+      "md5": "44d88612fea8a8f36de82e1278abb02f",
+      "sha1": "3395856ce81f2b7382dee72602f798b642f14140",
+      "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
+    }
+  },
+  "step_2": {
+    "title": "Investigate the IP Address",
+    "description": "Gather information on the outbound IP address '13.224.189.18' to identify any malicious activity or association with known command and control servers.",
+    "ioc": "13.224.189.18",
+    "ioc_type": "IP Address",
+    "results": {
       "reputation": {
         "ip": "13.224.189.18",
         "organization": "Amazon.com, Inc.",
@@ -185,7 +190,7 @@
           443
         ],
         "vulns": [],
-        "last_update": "2024-10-07T17:41:05.201654",
+        "last_update": "2024-10-08T06:17:16.105466",
         "hostnames": [
           "server-13-224-189-18.fra2.r.cloudfront.net"
         ],
@@ -195,6 +200,7 @@
         "reputation": "Low Risk"
       },
       "geolocation": {
+        "ip": "13.224.189.18",
         "country": "Germany",
         "country_code": "DE",
         "city": "M\u00f6rfelden-Walldorf",
@@ -202,64 +208,75 @@
         "latitude": 49.99472,
         "longitude": 8.58361,
         "isp": "Amazon.com, Inc.",
-        "asn": "AS16509"
+        "asn": "AS16509",
+        "organization": "Amazon.com, Inc."
       }
-    },
-    "step_3": {
-      "title": "Research Process Name",
-      "description": "Research the process name in cybersecurity forums and databases to understand if it's associated with known ransomware.",
-      "ioc": "encryptor.exe",
-      "ioc_type": "Process Name",
-      "resources": [
-        {
-          "name": "BleepingComputer",
-          "url": "https://www.bleepingcomputer.com/"
-        },
-        {
-          "name": "Reddit - r/netsec",
-          "url": "https://www.reddit.com/r/netsec/"
-        },
-        {
-          "name": "Malwarebytes Forums",
-          "url": "https://forums.malwarebytes.com/"
-        }
-      ]
-    },
-    "step_4": {
-      "title": "Check Registry Changes",
-      "description": "Investigate the registry change for persistence techniques associated with ransomware.",
-      "ioc": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
-      "ioc_type": "Registry Entry",
-      "resources": [
-        {
-          "name": "OSForensics Registry",
-          "url": "https://www.osforensics.com/tools/windows-registry.html"
-        },
-        {
-          "name": "Windows Registry Hives",
-          "url": "https://www.hive-registry.com/"
-        }
-      ]
-    },
-    "step_5": {
-      "title": "Gather Threat Intelligence",
-      "description": "Search comprehensive threat intelligence platforms for reports related to identified IOCs.",
-      "ioc": "Multiple IOCs",
-      "ioc_type": "Various",
-      "resources": [
-        {
-          "name": "Recorded Future",
-          "url": "https://www.recordedfuture.com/"
-        },
-        {
-          "name": "FireEye Threat Intelligence",
-          "url": "https://www.fireeye.com/solutions/cyber-threat-intelligence.html"
-        },
-        {
-          "name": "ThreatConnect",
-          "url": "https://www.threatconnect.com/"
-        }
-      ]
     }
+  },
+  "step_3": {
+    "title": "Look Up the Process Name",
+    "description": "Search for the process name 'encryptor.exe' in public databases to find any reports or discussions related to this executable being used in ransomware attacks.",
+    "ioc": "encryptor.exe",
+    "ioc_type": "Process Name",
+    "results": {
+      "error": "Error fetching VirusTotal report: 404 Client Error: Not Found for url: https://www.virustotal.com/api/v3/files/encryptor.exe"
+    },
+    "resources": [
+      {
+        "name": "VirusTotal",
+        "url": "https://www.virustotal.com/"
+      },
+      {
+        "name": "ThreatCrowd",
+        "url": "https://www.threatcrowd.org/"
+      },
+      {
+        "name": "Any.Run",
+        "url": "https://any.run/"
+      }
+    ]
+  },
+  "step_4": {
+    "title": "Search for Registry Changes",
+    "description": "Investigate registry change entry 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' to determine if similar methods have been used by known ransomware families to maintain persistence.",
+    "ioc": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+    "ioc_type": "Registry Entry",
+    "results": {
+      "error": "Error fetching VirusTotal report: 404 Client Error: Not Found for url: https://www.virustotal.com/api/v3/files/HKCU%5CSoftware%5CMicrosoft%5CWindows%5CCurrentVersion%5CRun"
+    },
+    "resources": [
+      {
+        "name": "Reddit - r/Malware",
+        "url": "https://www.reddit.com/r/Malware/"
+      },
+      {
+        "name": "Bleeping Computer Forums",
+        "url": "https://www.bleepingcomputer.com/forums/"
+      },
+      {
+        "name": "Stack Exchange Information Security",
+        "url": "https://security.stackexchange.com/"
+      }
+    ]
+  },
+  "step_5": {
+    "title": "Research Affected File Types",
+    "description": "Review publicly available information and reports on ransomware incidents involving file types like '.docx', '.xlsx', and '.pptx' being encrypted.",
+    "ioc": ".docx, .xlsx, .pptx",
+    "ioc_type": "File Type",
+    "resources": [
+      {
+        "name": "No More Ransom",
+        "url": "https://www.nomoreransom.org/"
+      },
+      {
+        "name": "The DFIR Report",
+        "url": "https://thedfirreport.com/"
+      },
+      {
+        "name": "Cyber Threat Alliance",
+        "url": "https://www.cyberthreatalliance.org/"
+      }
+    ]
   }
 }
