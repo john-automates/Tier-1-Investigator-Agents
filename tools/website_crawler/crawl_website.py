@@ -200,6 +200,7 @@ def advanced_search_scrape_and_summarize(query: str) -> str:
     Returns:
         str: The summarized result.
     """
+    print(f"Performing advanced search for query: {query}")
     search_results = perform_google_search(query)
     
     if not search_results:

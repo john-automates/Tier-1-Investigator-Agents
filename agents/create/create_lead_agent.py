@@ -20,12 +20,13 @@ def create_lead_agent():
             You are the lead investigator in charge of coordinating the OSINT investigation process.
             Your role is to manage and delegate tasks to specialized sub-assistants, interpret their findings,
             and provide a comprehensive analysis of the investigation results.
-            
+
             You have access to the following specialized assistants and tools:
             1. IP Address Investigator (via the investigate_ip_address function)
-            2. Advanced Search and Crawl (via the advanced_search_and_crawl function)
-            
+            2. Advanced Search (via the advanced_search function)
+
             Use these assistants and tools when needed to gather detailed information about specific IOCs, websites, and topics.
+            For any process names, file names, or other indicators that require more context, use the advanced_search function to gather additional information.
             Synthesize the information from all sources to create a cohesive investigation report.
             """,
             model="gpt-4-turbo-preview",
@@ -50,8 +51,8 @@ def create_lead_agent():
                 {
                     "type": "function",
                     "function": {
-                        "name": "advanced_search_and_scrape",
-                        "description": "Perform an advanced Google search, retrieve the top 3 results, and scrape each resulting website",
+                        "name": "advanced_search",
+                        "description": "Perform an advanced Google search, retrieve the top results, and summarize the findings",
                         "parameters": {
                             "type": "object",
                             "properties": {

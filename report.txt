@@ -3,9 +3,9 @@
 --- Step 1: Detection Analysis ---
 {
   "detection": {
-    "detection_id": "DETECT-2024-10-05-001",
+    "id": "DETECT-2024-10-05-001",
     "timestamp": "2024-10-05T14:35:27Z",
-    "severity_level": "High",
+    "severity": "High",
     "alert_source": "Endpoint Security Agent v3.2.1",
     "hostname": "WIN-SERVER-01",
     "operating_system": "Windows Server 2019",
@@ -24,27 +24,17 @@
       },
       "file_hash": "44d88612fea8a8f36de82e1278abb02f",
       "network_activity": {
-        "outbound_connection": {
-          "ip": "13.224.189.18",
-          "port": 443
-        }
+        "direction": "outbound",
+        "destination": "13.224.189.18",
+        "port": 443
       },
       "registry_changes": {
         "added_entry": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
       },
       "affected_files": [
-        {
-          "file_type": ".docx",
-          "location": "C:\\Users\\Public\\Documents"
-        },
-        {
-          "file_type": ".xlsx",
-          "location": "C:\\Users\\Public\\Documents"
-        },
-        {
-          "file_type": ".pptx",
-          "location": "C:\\Users\\Public\\Documents"
-        }
+        "C:\\Users\\Public\\Documents\\file1.docx",
+        "C:\\Users\\Public\\Documents\\file2.xlsx",
+        "C:\\Users\\Public\\Documents\\file3.pptx"
       ]
     }
   }
@@ -53,130 +43,114 @@
 --- Step 2: OSINT Investigation Plan ---
 {
   "step_1": {
-    "title": "Analyze the File Hash",
-    "description": "Investigate the file hash '44d88612fea8a8f36de82e1278abb02f' in threat intelligence databases to determine if it is associated with known ransomware.",
+    "title": "Investigate File Hash on VirusTotal",
+    "description": "Use the get_virustotal_report tool to gather detailed information about the file hash associated with the ransomware activity. This will help identify if the file is a known threat and provide insights into its behavior and origins.",
     "ioc": "44d88612fea8a8f36de82e1278abb02f",
     "ioc_type": "File Hash",
     "resources": [
       {
         "name": "VirusTotal",
         "url": "https://www.virustotal.com/"
-      },
-      {
-        "name": "MalwareBazaar",
-        "url": "https://bazaar.abuse.ch/"
-      },
-      {
-        "name": "Hybrid Analysis",
-        "url": "https://www.hybrid-analysis.com/"
       }
     ]
   },
   "step_2": {
-    "title": "Investigate the IP Address",
-    "description": "Gather information on the outbound IP address '13.224.189.18' to identify any malicious activity or association with known command and control servers.",
+    "title": "Check IP Reputation",
+    "description": "Use the check_ip_reputation tool to assess the reputation of the destination IP address used for outbound communication. This will provide information on whether the IP is associated with malicious activities.",
     "ioc": "13.224.189.18",
     "ioc_type": "IP Address",
     "resources": [
       {
-        "name": "IPinfo.io",
+        "name": "ipinfo.io",
         "url": "https://ipinfo.io/"
       },
       {
-        "name": "Talos Intelligence",
-        "url": "https://talosintelligence.com/"
-      },
-      {
-        "name": "AlienVault OTX",
-        "url": "https://otx.alienvault.com/"
+        "name": "AbuseIPDB",
+        "url": "https://www.abuseipdb.com/"
       }
     ]
   },
   "step_3": {
-    "title": "Look Up the Process Name",
-    "description": "Search for the process name 'encryptor.exe' in public databases to find any reports or discussions related to this executable being used in ransomware attacks.",
-    "ioc": "encryptor.exe",
-    "ioc_type": "Process Name",
+    "title": "Analyze IP Geolocation",
+    "description": "Use the get_geolocation tool to determine the geographic location of the IP address. This information can help identify the region from which the threat originated and provide potential geopolitical context.",
+    "ioc": "13.224.189.18",
+    "ioc_type": "IP Address",
     "resources": [
       {
-        "name": "VirusTotal",
-        "url": "https://www.virustotal.com/"
-      },
-      {
-        "name": "ThreatCrowd",
-        "url": "https://www.threatcrowd.org/"
-      },
-      {
-        "name": "Any.Run",
-        "url": "https://any.run/"
+        "name": "ip-api",
+        "url": "http://ip-api.com/"
       }
     ]
   },
   "step_4": {
-    "title": "Search for Registry Changes",
-    "description": "Investigate registry change entry 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' to determine if similar methods have been used by known ransomware families to maintain persistence.",
-    "ioc": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
-    "ioc_type": "Registry Entry",
+    "title": "Advanced Search for File Hash",
+    "description": "Use the advanced_search tool to perform an internet-wide search for mentions of the file hash. Look for any reports, submissions, or discussions related to this hash to learn about its spread, impact, or any available mitigation strategies.",
+    "ioc": "44d88612fea8a8f36de82e1278abb02f",
+    "ioc_type": "File Hash",
     "resources": [
       {
-        "name": "Reddit - r/Malware",
-        "url": "https://www.reddit.com/r/Malware/"
+        "name": "Global Threat Intelligence",
+        "url": "https://threatintelligenceplatform.com/"
       },
       {
-        "name": "Bleeping Computer Forums",
-        "url": "https://www.bleepingcomputer.com/forums/"
-      },
-      {
-        "name": "Stack Exchange Information Security",
-        "url": "https://security.stackexchange.com/"
+        "name": "MalwareBazaar",
+        "url": "https://bazaar.abuse.ch/"
       }
     ]
   },
   "step_5": {
-    "title": "Research Affected File Types",
-    "description": "Review publicly available information and reports on ransomware incidents involving file types like '.docx', '.xlsx', and '.pptx' being encrypted.",
-    "ioc": ".docx, .xlsx, .pptx",
-    "ioc_type": "File Type",
+    "title": "Research Process Name and Path",
+    "description": "Perform an advanced search on the internet to find any known associations, reports, or patterns related to the process name 'encryptor.exe' and its path. Investigate if there are similar instances or patterns identified by other security researchers.",
+    "ioc": "encryptor.exe",
+    "ioc_type": "Process Name and Path",
     "resources": [
       {
-        "name": "No More Ransom",
-        "url": "https://www.nomoreransom.org/"
+        "name": "Hybrid Analysis",
+        "url": "https://www.hybrid-analysis.com/"
       },
       {
-        "name": "The DFIR Report",
-        "url": "https://thedfirreport.com/"
+        "name": "Malpedia",
+        "url": "https://malpedia.caad.fkie.fraunhofer.de/"
+      }
+    ]
+  },
+  "step_6": {
+    "title": "Investigation of Registry Changes",
+    "description": "Search for information regarding the specific registry changes made by ransomware, especially the significance of modifications to the 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' registry entry. Determine if similar registry modifications have been observed in other ransomware cases.",
+    "ioc": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+    "ioc_type": "Registry Changes",
+    "resources": [
+      {
+        "name": "BleepingComputer",
+        "url": "https://www.bleepingcomputer.com/"
       },
       {
-        "name": "Cyber Threat Alliance",
-        "url": "https://www.cyberthreatalliance.org/"
+        "name": "PCrisk",
+        "url": "https://www.pcrisk.com/"
       }
     ]
   }
 }
 
 --- Step 3: Investigation Results ---
+--- step_1: Investigate File Hash on VirusTotal ---
 {
-  "step_1": {
-    "title": "Analyze the File Hash",
-    "description": "Investigate the file hash '44d88612fea8a8f36de82e1278abb02f' in threat intelligence databases to determine if it is associated with known ransomware.",
-    "ioc": "44d88612fea8a8f36de82e1278abb02f",
-    "ioc_type": "File Hash",
-    "results": {
-      "scan_date": 1728386276,
-      "total_scans": 77,
-      "malicious": 65,
-      "suspicious": 0,
-      "undetected": 5,
-      "file_type": "VBA",
-      "file_size": 68,
-      "md5": "44d88612fea8a8f36de82e1278abb02f",
-      "sha1": "3395856ce81f2b7382dee72602f798b642f14140",
-      "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
-    }
-  },
-  "step_2": {
-    "title": "Investigate the IP Address",
-    "description": "Gather information on the outbound IP address '13.224.189.18' to identify any malicious activity or association with known command and control servers.",
+  "scan_date": 1728508441,
+  "total_scans": 77,
+  "malicious": 48,
+  "suspicious": 0,
+  "undetected": 3,
+  "file_type": "VBA",
+  "file_size": 68,
+  "md5": "44d88612fea8a8f36de82e1278abb02f",
+  "sha1": "3395856ce81f2b7382dee72602f798b642f14140",
+  "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
+}
+
+--- step_2: Check IP Reputation ---
+{
+  "investigation_step": {
+    "title": "Check IP Reputation",
     "ioc": "13.224.189.18",
     "ioc_type": "IP Address",
     "results": {
@@ -190,7 +164,7 @@
           443
         ],
         "vulns": [],
-        "last_update": "2024-10-08T06:17:16.105466",
+        "last_update": "2024-10-09T12:45:11.661627",
         "hostnames": [
           "server-13-224-189-18.fra2.r.cloudfront.net"
         ],
@@ -212,71 +186,229 @@
         "organization": "Amazon.com, Inc."
       }
     }
+  }
+}
+
+--- step_3: Analyze IP Geolocation ---
+{
+  "investigation_step": {
+    "title": "Analyze IP Geolocation",
+    "ioc": "13.224.189.18",
+    "ioc_type": "IP Address",
+    "results": {
+      "reputation": {
+        "ip": "13.224.189.18",
+        "organization": "Amazon.com, Inc.",
+        "country": "Germany",
+        "city": "M\u00f6rfelden-Walldorf",
+        "open_ports": [
+          80,
+          443
+        ],
+        "vulns": [],
+        "last_update": "2024-10-09T12:45:11.661627",
+        "hostnames": [
+          "server-13-224-189-18.fra2.r.cloudfront.net"
+        ],
+        "domains": [
+          "cloudfront.net"
+        ],
+        "reputation": "Low Risk"
+      },
+      "geolocation": {
+        "ip": "13.224.189.18",
+        "country": "Germany",
+        "country_code": "DE",
+        "city": "M\u00f6rfelden-Walldorf",
+        "region_code": "HE",
+        "latitude": 49.99472,
+        "longitude": 8.58361,
+        "isp": "Amazon.com, Inc.",
+        "asn": "AS16509",
+        "organization": "Amazon.com, Inc."
+      }
+    }
+  }
+}
+
+--- step_4: Advanced Search for File Hash ---
+{
+  "investigation_step": "Advanced Search for File Hash",
+  "ioc": "44d88612fea8a8f36de82e1278abb02f",
+  "ioc_type": "File Hash",
+  "results": {
+    "scan_date": "2024-06-06 03:34:01 UTC",
+    "total_scans": 77,
+    "malicious": 48,
+    "suspicious": 0,
+    "undetected": 3,
+    "file_type": "VBA",
+    "file_size": 68,
+    "hashes": {
+      "md5": "44d88612fea8a8f36de82e1278abb02f",
+      "sha1": "3395856ce81f2b7382dee72602f798b642f14140",
+      "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
+    }
+  }
+}
+
+--- step_5: Research Process Name and Path ---
+{
+  "error": "Unable to retrieve information from VirusTotal for the specified IOC 'encryptor.exe'. It may not be registered in the database."
+}
+
+--- step_6: Investigation of Registry Changes ---
+{
+  "title": "Investigation of Registry Changes",
+  "description": "Search for information regarding the specific registry changes made by ransomware, especially the significance of modifications to the 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' registry entry.",
+  "ioc": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+  "ioc_type": "Registry Changes",
+  "findings": [
+    {
+      "source": "BleepingComputer",
+      "description": "BleepingComputer reported that ransomware often utilizes the 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' registry key to establish persistence on infected machines by ensuring that malicious software runs on startup. This technique allows ransomware to re-execute even after a system reboot, making it difficult for victims to remove the infection without proper intervention."
+    },
+    {
+      "source": "PCrisk",
+      "description": "PCrisk has documented various ransomware families that modify this specific registry key to maintain their presence. They emphasize that such modifications are commonly observed in multiple ransomware attacks. The alterations typically involve adding an entry that points to a malicious executable that the ransomware deployment utilizes, reinforcing its persistence."
+    }
+  ],
+  "conclusion": "The investigation of the registry changes indicates that modifications to 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' are a recognized method for ransomware to maintain persistence. Both BleepingComputer and PCrisk highlight this trend, confirming that similar registry modifications have been observed across various ransomware cases."
+}
+
+
+
+--- Step 3: Investigation Results ---
+{
+  "step_1": {
+    "scan_date": 1728508441,
+    "total_scans": 77,
+    "malicious": 48,
+    "suspicious": 0,
+    "undetected": 3,
+    "file_type": "VBA",
+    "file_size": 68,
+    "md5": "44d88612fea8a8f36de82e1278abb02f",
+    "sha1": "3395856ce81f2b7382dee72602f798b642f14140",
+    "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
+  },
+  "step_2": {
+    "investigation_step": {
+      "title": "Check IP Reputation",
+      "ioc": "13.224.189.18",
+      "ioc_type": "IP Address",
+      "results": {
+        "reputation": {
+          "ip": "13.224.189.18",
+          "organization": "Amazon.com, Inc.",
+          "country": "Germany",
+          "city": "M\u00f6rfelden-Walldorf",
+          "open_ports": [
+            80,
+            443
+          ],
+          "vulns": [],
+          "last_update": "2024-10-09T12:45:11.661627",
+          "hostnames": [
+            "server-13-224-189-18.fra2.r.cloudfront.net"
+          ],
+          "domains": [
+            "cloudfront.net"
+          ],
+          "reputation": "Low Risk"
+        },
+        "geolocation": {
+          "ip": "13.224.189.18",
+          "country": "Germany",
+          "country_code": "DE",
+          "city": "M\u00f6rfelden-Walldorf",
+          "region_code": "HE",
+          "latitude": 49.99472,
+          "longitude": 8.58361,
+          "isp": "Amazon.com, Inc.",
+          "asn": "AS16509",
+          "organization": "Amazon.com, Inc."
+        }
+      }
+    }
   },
   "step_3": {
-    "title": "Look Up the Process Name",
-    "description": "Search for the process name 'encryptor.exe' in public databases to find any reports or discussions related to this executable being used in ransomware attacks.",
-    "ioc": "encryptor.exe",
-    "ioc_type": "Process Name",
-    "results": {
-      "error": "Error fetching VirusTotal report: 404 Client Error: Not Found for url: https://www.virustotal.com/api/v3/files/encryptor.exe"
-    },
-    "resources": [
-      {
-        "name": "VirusTotal",
-        "url": "https://www.virustotal.com/"
-      },
-      {
-        "name": "ThreatCrowd",
-        "url": "https://www.threatcrowd.org/"
-      },
-      {
-        "name": "Any.Run",
-        "url": "https://any.run/"
+    "investigation_step": {
+      "title": "Analyze IP Geolocation",
+      "ioc": "13.224.189.18",
+      "ioc_type": "IP Address",
+      "results": {
+        "reputation": {
+          "ip": "13.224.189.18",
+          "organization": "Amazon.com, Inc.",
+          "country": "Germany",
+          "city": "M\u00f6rfelden-Walldorf",
+          "open_ports": [
+            80,
+            443
+          ],
+          "vulns": [],
+          "last_update": "2024-10-09T12:45:11.661627",
+          "hostnames": [
+            "server-13-224-189-18.fra2.r.cloudfront.net"
+          ],
+          "domains": [
+            "cloudfront.net"
+          ],
+          "reputation": "Low Risk"
+        },
+        "geolocation": {
+          "ip": "13.224.189.18",
+          "country": "Germany",
+          "country_code": "DE",
+          "city": "M\u00f6rfelden-Walldorf",
+          "region_code": "HE",
+          "latitude": 49.99472,
+          "longitude": 8.58361,
+          "isp": "Amazon.com, Inc.",
+          "asn": "AS16509",
+          "organization": "Amazon.com, Inc."
+        }
       }
-    ]
+    }
   },
   "step_4": {
-    "title": "Search for Registry Changes",
-    "description": "Investigate registry change entry 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' to determine if similar methods have been used by known ransomware families to maintain persistence.",
-    "ioc": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
-    "ioc_type": "Registry Entry",
+    "investigation_step": "Advanced Search for File Hash",
+    "ioc": "44d88612fea8a8f36de82e1278abb02f",
+    "ioc_type": "File Hash",
     "results": {
-      "error": "Error fetching VirusTotal report: 404 Client Error: Not Found for url: https://www.virustotal.com/api/v3/files/HKCU%5CSoftware%5CMicrosoft%5CWindows%5CCurrentVersion%5CRun"
-    },
-    "resources": [
-      {
-        "name": "Reddit - r/Malware",
-        "url": "https://www.reddit.com/r/Malware/"
-      },
-      {
-        "name": "Bleeping Computer Forums",
-        "url": "https://www.bleepingcomputer.com/forums/"
-      },
-      {
-        "name": "Stack Exchange Information Security",
-        "url": "https://security.stackexchange.com/"
+      "scan_date": "2024-06-06 03:34:01 UTC",
+      "total_scans": 77,
+      "malicious": 48,
+      "suspicious": 0,
+      "undetected": 3,
+      "file_type": "VBA",
+      "file_size": 68,
+      "hashes": {
+        "md5": "44d88612fea8a8f36de82e1278abb02f",
+        "sha1": "3395856ce81f2b7382dee72602f798b642f14140",
+        "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
       }
-    ]
+    }
   },
   "step_5": {
-    "title": "Research Affected File Types",
-    "description": "Review publicly available information and reports on ransomware incidents involving file types like '.docx', '.xlsx', and '.pptx' being encrypted.",
-    "ioc": ".docx, .xlsx, .pptx",
-    "ioc_type": "File Type",
-    "resources": [
+    "error": "Unable to retrieve information from VirusTotal for the specified IOC 'encryptor.exe'. It may not be registered in the database."
+  },
+  "step_6": {
+    "title": "Investigation of Registry Changes",
+    "description": "Search for information regarding the specific registry changes made by ransomware, especially the significance of modifications to the 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' registry entry.",
+    "ioc": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+    "ioc_type": "Registry Changes",
+    "findings": [
       {
-        "name": "No More Ransom",
-        "url": "https://www.nomoreransom.org/"
+        "source": "BleepingComputer",
+        "description": "BleepingComputer reported that ransomware often utilizes the 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' registry key to establish persistence on infected machines by ensuring that malicious software runs on startup. This technique allows ransomware to re-execute even after a system reboot, making it difficult for victims to remove the infection without proper intervention."
       },
       {
-        "name": "The DFIR Report",
-        "url": "https://thedfirreport.com/"
-      },
-      {
-        "name": "Cyber Threat Alliance",
-        "url": "https://www.cyberthreatalliance.org/"
+        "source": "PCrisk",
+        "description": "PCrisk has documented various ransomware families that modify this specific registry key to maintain their presence. They emphasize that such modifications are commonly observed in multiple ransomware attacks. The alterations typically involve adding an entry that points to a malicious executable that the ransomware deployment utilizes, reinforcing its persistence."
       }
-    ]
+    ],
+    "conclusion": "The investigation of the registry changes indicates that modifications to 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' are a recognized method for ransomware to maintain persistence. Both BleepingComputer and PCrisk highlight this trend, confirming that similar registry modifications have been observed across various ransomware cases."
   }
 }
