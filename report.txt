@@ -2,40 +2,13 @@
 
 --- Step 1: Detection Analysis ---
 {
-  "detection": {
-    "id": "DETECT-2024-10-05-001",
-    "timestamp": "2024-10-05T14:35:27Z",
-    "severity": "High",
-    "alert_source": "Endpoint Security Agent v3.2.1",
-    "hostname": "WIN-SERVER-01",
-    "operating_system": "Windows Server 2019",
-    "detection_method": "Behavioral Analysis",
-    "incident_details": {
-      "detection_type": "Unauthorized Ransomware Activity",
-      "description": "An anomalous process exhibiting ransomware-like behavior was detected on the host. The process attempted to encrypt multiple files across various directories, modifying file extensions and appending .encrypted to filenames. Immediate action is recommended to contain and remediate the threat."
+  "detection_info": {
+    "file": {
+      "name": "encryptor.exe",
+      "hash": "44d88612fea8a8f36de82e1278abb02f"
     },
-    "indicators_of_compromise": {
-      "process_name": "encryptor.exe",
-      "process_id": 4821,
-      "process_path": "C:\\Users\\Public\\Downloads\\encryptor.exe",
-      "parent_process": {
-        "name": "explorer.exe",
-        "pid": 1568
-      },
-      "file_hash": "44d88612fea8a8f36de82e1278abb02f",
-      "network_activity": {
-        "direction": "outbound",
-        "destination": "13.224.189.18",
-        "port": 443
-      },
-      "registry_changes": {
-        "added_entry": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
-      },
-      "affected_files": [
-        "C:\\Users\\Public\\Documents\\file1.docx",
-        "C:\\Users\\Public\\Documents\\file2.xlsx",
-        "C:\\Users\\Public\\Documents\\file3.pptx"
-      ]
+    "network": {
+      "ip_address": "13.224.189.18"
     }
   }
 }
@@ -43,26 +16,38 @@
 --- Step 2: OSINT Investigation Plan ---
 {
   "step_1": {
-    "title": "Investigate File Hash on VirusTotal",
-    "description": "Use the get_virustotal_report tool to gather detailed information about the file hash associated with the ransomware activity. This will help identify if the file is a known threat and provide insights into its behavior and origins.",
+    "title": "Analyze File Hash with VirusTotal",
+    "description": "Retrieve and analyze the VirusTotal report for the file hash associated with the executable 'encryptor.exe' to gather information about potential threats, relationships, and previous analysis data.",
     "ioc": "44d88612fea8a8f36de82e1278abb02f",
     "ioc_type": "File Hash",
+    "tool": {
+      "name": "get_virustotal_report",
+      "instructions": "Use the get_virustotal_report tool with the file hash '44d88612fea8a8f36de82e1278abb02f' to retrieve detailed information and summary of detections from various antivirus engines, as well as metadata about the file."
+    },
     "resources": [
       {
         "name": "VirusTotal",
         "url": "https://www.virustotal.com/"
+      },
+      {
+        "name": "Google Safety Center",
+        "url": "https://safety.google/intl/en_us/"
       }
     ]
   },
   "step_2": {
     "title": "Check IP Reputation",
-    "description": "Use the check_ip_reputation tool to assess the reputation of the destination IP address used for outbound communication. This will provide information on whether the IP is associated with malicious activities.",
+    "description": "Investigate the reputation of the IP address 13.224.189.18 to determine if it is associated with any known malicious activity or belongs to any malicious actor.",
     "ioc": "13.224.189.18",
     "ioc_type": "IP Address",
+    "tool": {
+      "name": "check_ip_reputation",
+      "instructions": "Use the check_ip_reputation tool to assess the reputation of the IP address '13.224.189.18'. The tool will provide details regarding any malicious reports or known issues linked to this IP."
+    },
     "resources": [
       {
-        "name": "ipinfo.io",
-        "url": "https://ipinfo.io/"
+        "name": "IPVoid",
+        "url": "https://www.ipvoid.com/"
       },
       {
         "name": "AbuseIPDB",
@@ -71,344 +56,305 @@
     ]
   },
   "step_3": {
-    "title": "Analyze IP Geolocation",
-    "description": "Use the get_geolocation tool to determine the geographic location of the IP address. This information can help identify the region from which the threat originated and provide potential geopolitical context.",
+    "title": "Geo-locate the IP Address",
+    "description": "Determine the geographical location of the IP address '13.224.189.18' to understand its origin and any potential regional threat indicators.",
     "ioc": "13.224.189.18",
     "ioc_type": "IP Address",
+    "tool": {
+      "name": "get_geolocation",
+      "instructions": "Use the get_geolocation tool to identify the physical location associated with the IP address '13.224.189.18'. This could be useful in understanding the source and context of the threat."
+    },
     "resources": [
       {
-        "name": "ip-api",
-        "url": "http://ip-api.com/"
+        "name": "IP2Location",
+        "url": "https://www.ip2location.com/"
+      },
+      {
+        "name": "GeoIP Tool",
+        "url": "http://geoiptool.com/"
       }
     ]
   },
   "step_4": {
-    "title": "Advanced Search for File Hash",
-    "description": "Use the advanced_search tool to perform an internet-wide search for mentions of the file hash. Look for any reports, submissions, or discussions related to this hash to learn about its spread, impact, or any available mitigation strategies.",
+    "title": "Advanced Web Search for File Hash",
+    "description": "Perform an advanced search on the internet using the file hash '44d88612fea8a8f36de82e1278abb02f' to collect any additional context or reports that may not be available through traditional threat intelligence databases.",
     "ioc": "44d88612fea8a8f36de82e1278abb02f",
     "ioc_type": "File Hash",
+    "tool": {
+      "name": "advanced_search",
+      "instructions": "Conduct an advanced search using the file hash '44d88612fea8a8f36de82e1278abb02f'. Summarize the information from the top 3 search results to acquire any additional insights or community discussions about the file."
+    },
     "resources": [
       {
-        "name": "Global Threat Intelligence",
-        "url": "https://threatintelligenceplatform.com/"
-      },
-      {
-        "name": "MalwareBazaar",
-        "url": "https://bazaar.abuse.ch/"
+        "name": "Google Advanced Search",
+        "url": "https://www.google.com/advanced_search"
       }
     ]
   },
   "step_5": {
-    "title": "Research Process Name and Path",
-    "description": "Perform an advanced search on the internet to find any known associations, reports, or patterns related to the process name 'encryptor.exe' and its path. Investigate if there are similar instances or patterns identified by other security researchers.",
-    "ioc": "encryptor.exe",
-    "ioc_type": "Process Name and Path",
+    "title": "Advanced Web Search for IP Address",
+    "description": "Execute an advanced search on the internet with the IP address '13.224.189.18' to gather any further context from blogs, forums, or other threat intelligence reports.",
+    "ioc": "13.224.189.18",
+    "ioc_type": "IP Address",
+    "tool": {
+      "name": "advanced_search",
+      "instructions": "Perform an advanced search using the IP address '13.224.189.18'. Compile a concise summary of the top 3 results to uncover any discussions or additional information related to this IP."
+    },
     "resources": [
       {
-        "name": "Hybrid Analysis",
-        "url": "https://www.hybrid-analysis.com/"
-      },
-      {
-        "name": "Malpedia",
-        "url": "https://malpedia.caad.fkie.fraunhofer.de/"
-      }
-    ]
-  },
-  "step_6": {
-    "title": "Investigation of Registry Changes",
-    "description": "Search for information regarding the specific registry changes made by ransomware, especially the significance of modifications to the 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' registry entry. Determine if similar registry modifications have been observed in other ransomware cases.",
-    "ioc": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
-    "ioc_type": "Registry Changes",
-    "resources": [
-      {
-        "name": "BleepingComputer",
-        "url": "https://www.bleepingcomputer.com/"
-      },
-      {
-        "name": "PCrisk",
-        "url": "https://www.pcrisk.com/"
+        "name": "Google Advanced Search",
+        "url": "https://www.google.com/advanced_search"
       }
     ]
   }
 }
-
---- Step 3: Investigation Results ---
---- step_1: Investigate File Hash on VirusTotal ---
+--- step_1: Analyze File Hash with VirusTotal ---
 {
-  "scan_date": 1728508441,
-  "total_scans": 77,
-  "malicious": 48,
-  "suspicious": 0,
-  "undetected": 3,
-  "file_type": "VBA",
-  "file_size": 68,
-  "md5": "44d88612fea8a8f36de82e1278abb02f",
-  "sha1": "3395856ce81f2b7382dee72602f798b642f14140",
-  "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
+  "title": "Analyze File Hash with VirusTotal",
+  "description": "Retrieve and analyze the VirusTotal report for the file hash associated with the executable 'encryptor.exe' to gather information about potential threats, relationships, and previous analysis data.",
+  "ioc": {
+    "value": "44d88612fea8a8f36de82e1278abb02f",
+    "type": "File Hash"
+  },
+  "tool": {
+    "name": "get_virustotal_report",
+    "instructions": "Use the get_virustotal_report tool with the file hash '44d88612fea8a8f36de82e1278abb02f' to retrieve detailed information and summary of detections from various antivirus engines, as well as metadata about the file."
+  },
+  "resources": [
+    {
+      "name": "VirusTotal",
+      "url": "https://www.virustotal.com/"
+    },
+    {
+      "name": "Google Safety Center",
+      "url": "https://safety.google/intl/en_us/"
+    }
+  ],
+  "virustotal_report": {
+    "scan_date": "2024-06-11",
+    "total_scans": 77,
+    "malicious": 67,
+    "suspicious": 0,
+    "undetected": 3,
+    "file_type": "VBA",
+    "file_size": "68 bytes",
+    "md5": "44d88612fea8a8f36de82e1278abb02f",
+    "sha1": "3395856ce81f2b7382dee72602f798b642f14140",
+    "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
+  }
 }
 
 --- step_2: Check IP Reputation ---
 {
-  "investigation_step": {
-    "title": "Check IP Reputation",
-    "ioc": "13.224.189.18",
-    "ioc_type": "IP Address",
-    "results": {
-      "reputation": {
-        "ip": "13.224.189.18",
-        "organization": "Amazon.com, Inc.",
-        "country": "Germany",
-        "city": "M\u00f6rfelden-Walldorf",
-        "open_ports": [
-          80,
-          443
-        ],
-        "vulns": [],
-        "last_update": "2024-10-09T12:45:11.661627",
-        "hostnames": [
-          "server-13-224-189-18.fra2.r.cloudfront.net"
-        ],
-        "domains": [
-          "cloudfront.net"
-        ],
-        "reputation": "Low Risk"
-      },
-      "geolocation": {
-        "ip": "13.224.189.18",
-        "country": "Germany",
-        "country_code": "DE",
-        "city": "M\u00f6rfelden-Walldorf",
-        "region_code": "HE",
-        "latitude": 49.99472,
-        "longitude": 8.58361,
-        "isp": "Amazon.com, Inc.",
-        "asn": "AS16509",
-        "organization": "Amazon.com, Inc."
-      }
-    }
-  }
-}
-
---- step_3: Analyze IP Geolocation ---
-{
-  "investigation_step": {
-    "title": "Analyze IP Geolocation",
-    "ioc": "13.224.189.18",
-    "ioc_type": "IP Address",
-    "results": {
-      "reputation": {
-        "ip": "13.224.189.18",
-        "organization": "Amazon.com, Inc.",
-        "country": "Germany",
-        "city": "M\u00f6rfelden-Walldorf",
-        "open_ports": [
-          80,
-          443
-        ],
-        "vulns": [],
-        "last_update": "2024-10-09T12:45:11.661627",
-        "hostnames": [
-          "server-13-224-189-18.fra2.r.cloudfront.net"
-        ],
-        "domains": [
-          "cloudfront.net"
-        ],
-        "reputation": "Low Risk"
-      },
-      "geolocation": {
-        "ip": "13.224.189.18",
-        "country": "Germany",
-        "country_code": "DE",
-        "city": "M\u00f6rfelden-Walldorf",
-        "region_code": "HE",
-        "latitude": 49.99472,
-        "longitude": 8.58361,
-        "isp": "Amazon.com, Inc.",
-        "asn": "AS16509",
-        "organization": "Amazon.com, Inc."
-      }
-    }
-  }
-}
-
---- step_4: Advanced Search for File Hash ---
-{
-  "investigation_step": "Advanced Search for File Hash",
-  "ioc": "44d88612fea8a8f36de82e1278abb02f",
-  "ioc_type": "File Hash",
-  "results": {
-    "scan_date": "2024-06-06 03:34:01 UTC",
-    "total_scans": 77,
-    "malicious": 48,
-    "suspicious": 0,
-    "undetected": 3,
-    "file_type": "VBA",
-    "file_size": 68,
-    "hashes": {
-      "md5": "44d88612fea8a8f36de82e1278abb02f",
-      "sha1": "3395856ce81f2b7382dee72602f798b642f14140",
-      "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
-    }
-  }
-}
-
---- step_5: Research Process Name and Path ---
-{
-  "error": "Unable to retrieve information from VirusTotal for the specified IOC 'encryptor.exe'. It may not be registered in the database."
-}
-
---- step_6: Investigation of Registry Changes ---
-{
-  "title": "Investigation of Registry Changes",
-  "description": "Search for information regarding the specific registry changes made by ransomware, especially the significance of modifications to the 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' registry entry.",
-  "ioc": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
-  "ioc_type": "Registry Changes",
-  "findings": [
+  "title": "Check IP Reputation",
+  "description": "Investigate the reputation of the IP address 13.224.189.18 to determine if it is associated with any known malicious activity or belongs to any malicious actor.",
+  "ioc": "13.224.189.18",
+  "ioc_type": "IP Address",
+  "tool": {
+    "name": "check_ip_reputation",
+    "instructions": "Use the check_ip_reputation tool to assess the reputation of the IP address '13.224.189.18'. The tool will provide details regarding any malicious reports or known issues linked to this IP."
+  },
+  "resources": [
     {
-      "source": "BleepingComputer",
-      "description": "BleepingComputer reported that ransomware often utilizes the 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' registry key to establish persistence on infected machines by ensuring that malicious software runs on startup. This technique allows ransomware to re-execute even after a system reboot, making it difficult for victims to remove the infection without proper intervention."
+      "name": "IPVoid",
+      "url": "https://www.ipvoid.com/"
     },
     {
-      "source": "PCrisk",
-      "description": "PCrisk has documented various ransomware families that modify this specific registry key to maintain their presence. They emphasize that such modifications are commonly observed in multiple ransomware attacks. The alterations typically involve adding an entry that points to a malicious executable that the ransomware deployment utilizes, reinforcing its persistence."
+      "name": "AbuseIPDB",
+      "url": "https://www.abuseipdb.com/"
     }
-  ],
-  "conclusion": "The investigation of the registry changes indicates that modifications to 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' are a recognized method for ransomware to maintain persistence. Both BleepingComputer and PCrisk highlight this trend, confirming that similar registry modifications have been observed across various ransomware cases."
+  ]
 }
 
+--- step_3: Geo-locate the IP Address ---
+{
+  "title": "Geo-locate the IP Address",
+  "description": "Determine the geographical location of the IP address '13.224.189.18' to understand its origin and any potential regional threat indicators.",
+  "ioc": "13.224.189.18",
+  "ioc_type": "IP Address",
+  "tool": {
+    "name": "get_geolocation",
+    "instructions": "Use the get_geolocation tool to identify the physical location associated with the IP address '13.224.189.18'. This could be useful in understanding the source and context of the threat."
+  },
+  "resources": [
+    {
+      "name": "IP2Location",
+      "url": "https://www.ip2location.com/"
+    },
+    {
+      "name": "GeoIP Tool",
+      "url": "http://geoiptool.com/"
+    }
+  ]
+}
+
+--- step_4: Advanced Web Search for File Hash ---
+{
+  "title": "Advanced Web Search for File Hash",
+  "description": "Perform an advanced search on the internet using the file hash '44d88612fea8a8f36de82e1278abb02f' to collect any additional context or reports that may not be available through traditional threat intelligence databases.",
+  "ioc": "44d88612fea8a8f36de82e1278abb02f",
+  "ioc_type": "File Hash",
+  "search_results": [
+    {
+      "summary": "The MD5 hash '44d88612fea8a8f36de82e1278abb02f' corresponds to the string 'X5O!P%@AP\\[4\\\\\\\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H\\\\*'. This is a known test file used for checking the efficacy of antivirus software.",
+      "source": "https://md5.gromweb.com/"
+    },
+    {
+      "summary": "It is noted that MD5 is a weak cryptographic hash function. While reversing it may be challenging, it is feasible using reverse dictionaries, making it inappropriate for securing sensitive information.",
+      "source": "General knowledge on MD5 weaknesses."
+    }
+  ],
+  "resources": [
+    {
+      "name": "Google Advanced Search",
+      "url": "https://www.google.com/advanced_search"
+    }
+  ]
+}
+
+--- step_5: Advanced Web Search for IP Address ---
+{
+  "title": "Advanced Web Search for IP Address",
+  "description": "Execute an advanced search on the internet with the IP address '13.224.189.18' to gather any further context from blogs, forums, or other threat intelligence reports.",
+  "ioc": "13.224.189.18",
+  "ioc_type": "IP Address",
+  "tool": {
+    "name": "advanced_search",
+    "instructions": "Perform an advanced search using the IP address '13.224.189.18'. Compile a concise summary of the top 3 results to uncover any discussions or additional information related to this IP."
+  },
+  "resources": [
+    {
+      "name": "Google Advanced Search",
+      "url": "https://www.google.com/advanced_search"
+    }
+  ],
+  "search_results": [
+    {
+      "summary": "The IP address 13.224.189.18 is part of the 13.224.189.0/24 subnet, which is within the 13.224.0.0/16 range. This information is provided by IPinfo.io.",
+      "source": "https://ipinfo.io/ips/13.224.189.0/24"
+    }
+  ]
+}
 
 
 --- Step 3: Investigation Results ---
 {
   "step_1": {
-    "scan_date": 1728508441,
-    "total_scans": 77,
-    "malicious": 48,
-    "suspicious": 0,
-    "undetected": 3,
-    "file_type": "VBA",
-    "file_size": 68,
-    "md5": "44d88612fea8a8f36de82e1278abb02f",
-    "sha1": "3395856ce81f2b7382dee72602f798b642f14140",
-    "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
-  },
-  "step_2": {
-    "investigation_step": {
-      "title": "Check IP Reputation",
-      "ioc": "13.224.189.18",
-      "ioc_type": "IP Address",
-      "results": {
-        "reputation": {
-          "ip": "13.224.189.18",
-          "organization": "Amazon.com, Inc.",
-          "country": "Germany",
-          "city": "M\u00f6rfelden-Walldorf",
-          "open_ports": [
-            80,
-            443
-          ],
-          "vulns": [],
-          "last_update": "2024-10-09T12:45:11.661627",
-          "hostnames": [
-            "server-13-224-189-18.fra2.r.cloudfront.net"
-          ],
-          "domains": [
-            "cloudfront.net"
-          ],
-          "reputation": "Low Risk"
-        },
-        "geolocation": {
-          "ip": "13.224.189.18",
-          "country": "Germany",
-          "country_code": "DE",
-          "city": "M\u00f6rfelden-Walldorf",
-          "region_code": "HE",
-          "latitude": 49.99472,
-          "longitude": 8.58361,
-          "isp": "Amazon.com, Inc.",
-          "asn": "AS16509",
-          "organization": "Amazon.com, Inc."
-        }
+    "title": "Analyze File Hash with VirusTotal",
+    "description": "Retrieve and analyze the VirusTotal report for the file hash associated with the executable 'encryptor.exe' to gather information about potential threats, relationships, and previous analysis data.",
+    "ioc": {
+      "value": "44d88612fea8a8f36de82e1278abb02f",
+      "type": "File Hash"
+    },
+    "tool": {
+      "name": "get_virustotal_report",
+      "instructions": "Use the get_virustotal_report tool with the file hash '44d88612fea8a8f36de82e1278abb02f' to retrieve detailed information and summary of detections from various antivirus engines, as well as metadata about the file."
+    },
+    "resources": [
+      {
+        "name": "VirusTotal",
+        "url": "https://www.virustotal.com/"
+      },
+      {
+        "name": "Google Safety Center",
+        "url": "https://safety.google/intl/en_us/"
       }
-    }
-  },
-  "step_3": {
-    "investigation_step": {
-      "title": "Analyze IP Geolocation",
-      "ioc": "13.224.189.18",
-      "ioc_type": "IP Address",
-      "results": {
-        "reputation": {
-          "ip": "13.224.189.18",
-          "organization": "Amazon.com, Inc.",
-          "country": "Germany",
-          "city": "M\u00f6rfelden-Walldorf",
-          "open_ports": [
-            80,
-            443
-          ],
-          "vulns": [],
-          "last_update": "2024-10-09T12:45:11.661627",
-          "hostnames": [
-            "server-13-224-189-18.fra2.r.cloudfront.net"
-          ],
-          "domains": [
-            "cloudfront.net"
-          ],
-          "reputation": "Low Risk"
-        },
-        "geolocation": {
-          "ip": "13.224.189.18",
-          "country": "Germany",
-          "country_code": "DE",
-          "city": "M\u00f6rfelden-Walldorf",
-          "region_code": "HE",
-          "latitude": 49.99472,
-          "longitude": 8.58361,
-          "isp": "Amazon.com, Inc.",
-          "asn": "AS16509",
-          "organization": "Amazon.com, Inc."
-        }
-      }
-    }
-  },
-  "step_4": {
-    "investigation_step": "Advanced Search for File Hash",
-    "ioc": "44d88612fea8a8f36de82e1278abb02f",
-    "ioc_type": "File Hash",
-    "results": {
-      "scan_date": "2024-06-06 03:34:01 UTC",
+    ],
+    "virustotal_report": {
+      "scan_date": "2024-06-11",
       "total_scans": 77,
-      "malicious": 48,
+      "malicious": 67,
       "suspicious": 0,
       "undetected": 3,
       "file_type": "VBA",
-      "file_size": 68,
-      "hashes": {
-        "md5": "44d88612fea8a8f36de82e1278abb02f",
-        "sha1": "3395856ce81f2b7382dee72602f798b642f14140",
-        "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
-      }
+      "file_size": "68 bytes",
+      "md5": "44d88612fea8a8f36de82e1278abb02f",
+      "sha1": "3395856ce81f2b7382dee72602f798b642f14140",
+      "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
     }
   },
-  "step_5": {
-    "error": "Unable to retrieve information from VirusTotal for the specified IOC 'encryptor.exe'. It may not be registered in the database."
-  },
-  "step_6": {
-    "title": "Investigation of Registry Changes",
-    "description": "Search for information regarding the specific registry changes made by ransomware, especially the significance of modifications to the 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' registry entry.",
-    "ioc": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
-    "ioc_type": "Registry Changes",
-    "findings": [
+  "step_2": {
+    "title": "Check IP Reputation",
+    "description": "Investigate the reputation of the IP address 13.224.189.18 to determine if it is associated with any known malicious activity or belongs to any malicious actor.",
+    "ioc": "13.224.189.18",
+    "ioc_type": "IP Address",
+    "tool": {
+      "name": "check_ip_reputation",
+      "instructions": "Use the check_ip_reputation tool to assess the reputation of the IP address '13.224.189.18'. The tool will provide details regarding any malicious reports or known issues linked to this IP."
+    },
+    "resources": [
       {
-        "source": "BleepingComputer",
-        "description": "BleepingComputer reported that ransomware often utilizes the 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' registry key to establish persistence on infected machines by ensuring that malicious software runs on startup. This technique allows ransomware to re-execute even after a system reboot, making it difficult for victims to remove the infection without proper intervention."
+        "name": "IPVoid",
+        "url": "https://www.ipvoid.com/"
       },
       {
-        "source": "PCrisk",
-        "description": "PCrisk has documented various ransomware families that modify this specific registry key to maintain their presence. They emphasize that such modifications are commonly observed in multiple ransomware attacks. The alterations typically involve adding an entry that points to a malicious executable that the ransomware deployment utilizes, reinforcing its persistence."
+        "name": "AbuseIPDB",
+        "url": "https://www.abuseipdb.com/"
+      }
+    ]
+  },
+  "step_3": {
+    "title": "Geo-locate the IP Address",
+    "description": "Determine the geographical location of the IP address '13.224.189.18' to understand its origin and any potential regional threat indicators.",
+    "ioc": "13.224.189.18",
+    "ioc_type": "IP Address",
+    "tool": {
+      "name": "get_geolocation",
+      "instructions": "Use the get_geolocation tool to identify the physical location associated with the IP address '13.224.189.18'. This could be useful in understanding the source and context of the threat."
+    },
+    "resources": [
+      {
+        "name": "IP2Location",
+        "url": "https://www.ip2location.com/"
+      },
+      {
+        "name": "GeoIP Tool",
+        "url": "http://geoiptool.com/"
+      }
+    ]
+  },
+  "step_4": {
+    "title": "Advanced Web Search for File Hash",
+    "description": "Perform an advanced search on the internet using the file hash '44d88612fea8a8f36de82e1278abb02f' to collect any additional context or reports that may not be available through traditional threat intelligence databases.",
+    "ioc": "44d88612fea8a8f36de82e1278abb02f",
+    "ioc_type": "File Hash",
+    "search_results": [
+      {
+        "summary": "The MD5 hash '44d88612fea8a8f36de82e1278abb02f' corresponds to the string 'X5O!P%@AP\\[4\\\\\\\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H\\\\*'. This is a known test file used for checking the efficacy of antivirus software.",
+        "source": "https://md5.gromweb.com/"
+      },
+      {
+        "summary": "It is noted that MD5 is a weak cryptographic hash function. While reversing it may be challenging, it is feasible using reverse dictionaries, making it inappropriate for securing sensitive information.",
+        "source": "General knowledge on MD5 weaknesses."
       }
     ],
-    "conclusion": "The investigation of the registry changes indicates that modifications to 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' are a recognized method for ransomware to maintain persistence. Both BleepingComputer and PCrisk highlight this trend, confirming that similar registry modifications have been observed across various ransomware cases."
+    "resources": [
+      {
+        "name": "Google Advanced Search",
+        "url": "https://www.google.com/advanced_search"
+      }
+    ]
+  },
+  "step_5": {
+    "title": "Advanced Web Search for IP Address",
+    "description": "Execute an advanced search on the internet with the IP address '13.224.189.18' to gather any further context from blogs, forums, or other threat intelligence reports.",
+    "ioc": "13.224.189.18",
+    "ioc_type": "IP Address",
+    "tool": {
+      "name": "advanced_search",
+      "instructions": "Perform an advanced search using the IP address '13.224.189.18'. Compile a concise summary of the top 3 results to uncover any discussions or additional information related to this IP."
+    },
+    "resources": [
+      {
+        "name": "Google Advanced Search",
+        "url": "https://www.google.com/advanced_search"
+      }
+    ],
+    "search_results": [
+      {
+        "summary": "The IP address 13.224.189.18 is part of the 13.224.189.0/24 subnet, which is within the 13.224.0.0/16 range. This information is provided by IPinfo.io.",
+        "source": "https://ipinfo.io/ips/13.224.189.0/24"
+      }
+    ]
   }
 }

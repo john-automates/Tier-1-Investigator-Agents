@@ -6,6 +6,7 @@ import time
 import json
 from urllib.parse import urlparse
 import google.generativeai as genai
+from google.generativeai.types import HarmCategory, HarmBlockThreshold  # Import necessary enums
 
 # Load environment variables
 load_dotenv()
@@ -169,11 +170,20 @@ def summarize_results(query: str, scraping_json: str) -> str:
 
         prompt = f"Please provide a summary about '{query}' and cite your sources from the JSON below:\n{scraping_json}"
 
-        # Start a chat session with the Gemini model
-        chat_session = model.start_chat(history=[])
+        # Define safety settings to not block any content
+        safety_settings = {
+            HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+            HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
+            HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
+            HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
+        }
 
-        # Send the prompt without safety settings
-        response = chat_session.send_message(prompt)
+        # Use generate_content instead of start_chat to pass safety_settings
+        response = model.generate_content(
+            [prompt],
+            safety_settings=safety_settings,
+            # Include any additional generation configurations if necessary
+        )
 
         # Check if the response was blocked or successful
         if hasattr(response, 'text') and response.text:
@@ -244,7 +254,7 @@ def advanced_search_scrape_and_summarize(query: str) -> str:
 
 # Example usage
 if __name__ == "__main__":
-    test_query = "encryptor.exe"
+    test_query = "encryptor.exe malware"
     print(f"Starting advanced search, scrape, and summarize for query: '{test_query}'\n")
     final_summary = advanced_search_scrape_and_summarize(test_query)
     print("\nFinal Summary:")

@@ -6,7 +6,11 @@ from steps.step_2 import step_2
 from steps.step_3 import step_3
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s',
+                    handlers=[
+                        logging.FileHandler("investigation.log"),
+                        logging.StreamHandler()
+                    ])
 
 def write_to_report(step_number: int, step_name: str, data: dict):
     """Write step output to report.txt"""
@@ -22,6 +26,7 @@ def main():
         
         # Clear previous report
         open("report.txt", "w").close()
+        logging.info("Previous report cleared.")
         
         # Run step 1
         logging.info("Starting Step 1: Analyzing detection information")
@@ -42,7 +47,7 @@ def main():
         logging.info("Step 2 completed successfully")
         
         # Run step 3
-        logging.info("Starting Step 3: Coordinating investigation")
+        logging.info("Starting Step 3: Executing investigation plan")
         investigation_results = step_3(investigation_plan)
         if not investigation_results:
             logging.error("Step 3 failed: No investigation results obtained")
@@ -54,7 +59,7 @@ def main():
         logging.info("Report generated: report.txt")
     
     except Exception as e:
-        logging.error(f"An error occurred during execution: {str(e)}")
+        logging.error(f"An error occurred during execution: {str(e)}", exc_info=True)
 
 if __name__ == "__main__":
     main()
