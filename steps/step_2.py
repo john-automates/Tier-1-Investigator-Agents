@@ -37,8 +37,7 @@ def create_investigation_plan(detection_data: Dict[str, Any]) -> Dict[str, Any]:
                 "ioc": "The specific IOC being investigated",
                 "ioc_type": "Type of the IOC (e.g., File Hash, IP Address, Process Name)",
                 "tool": {{
-                    "name": "Tool name to be used",
-                    "instructions": "Detailed instructions on how to use the tool to achieve the desired outcome"
+                    "name": "Tool name to be used"
                 }},
                 "resources": [
                     {{

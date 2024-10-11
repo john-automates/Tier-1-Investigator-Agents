@@ -168,7 +168,7 @@ def summarize_results(query: str, scraping_json: str) -> str:
         print(f"Query: {query}")
         print(f"Scraping JSON (first 500 characters): {scraping_json[:500]}...")  # Print first 500 characters for brevity
 
-        prompt = f"Please provide a summary about '{query}' and cite your sources from the JSON below:\n{scraping_json}"
+        prompt = f"Please provide a summary about '{query}' and cite your sources from the JSON below:\n{scraping_json}\n Please provide the sources in a format that is easy to read and understand. Make sure to include the URL of the website where the information was found. Please make the summary clear and how it relates to the original query. "
 
         # Define safety settings to not block any content
         safety_settings = {
