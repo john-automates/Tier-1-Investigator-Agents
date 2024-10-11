@@ -6,10 +6,18 @@ from openai import OpenAI
 from typing import Dict, Any
 from dotenv import load_dotenv
 from tools.ip_address_investigator.ip_shodan import check_ip_reputation, get_geolocation
+from tools.file_hash_investigator.hash_virustotal import get_virustotal_report
+from tools.website_crawler.crawl_website import advanced_search_scrape_and_summarize
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler("investigation.log")
+    ]
+)
 
 # Load environment variables
 load_dotenv()
@@ -18,186 +26,171 @@ load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 # Get assistant IDs from environment variables
-LEAD_ASSISTANT_ID = os.getenv("LEAD_ASSISTANT_ID")
 IP_INVESTIGATOR_ID = os.getenv("IP_INVESTIGATOR_ID")
 
+if not IP_INVESTIGATOR_ID:
+    logging.error("IP_INVESTIGATOR_ID not found in environment variables.")
+    raise EnvironmentError("IP_INVESTIGATOR_ID not found in environment variables.")
+
+# Function mapping
+FUNCTION_MAPPING = {
+    "check_ip_reputation": check_ip_reputation,
+    "get_geolocation": get_geolocation,
+    "get_virustotal_report": get_virustotal_report,
+    "advanced_search": advanced_search_scrape_and_summarize
+}
+
 def create_thread():
-    """Create a new thread for the investigation."""
-    return client.beta.threads.create()
+    try:
+        thread = client.beta.threads.create()
+        logging.info(f"Created thread with ID: {thread.id}")
+        return thread
+    except Exception as e:
+        logging.error(f"Failed to create thread: {e}", exc_info=True)
+        raise
 
 def add_message_to_thread(thread_id: str, content: str):
-    """Add a message to the thread."""
-    client.beta.threads.messages.create(
-        thread_id=thread_id,
-        role="user",
-        content=content
-    )
+    try:
+        client.beta.threads.messages.create(
+            thread_id=thread_id,
+            role="user",
+            content=f"Please provide your response in JSON format. Here's the content: {content}"
+        )
+        logging.info(f"Added message to thread {thread_id}")
+    except Exception as e:
+        logging.error(f"Failed to add message to thread {thread_id}: {e}", exc_info=True)
+        raise
 
 def run_assistant(assistant_id: str, thread_id: str):
-    """Run the assistant on the thread."""
-    run = client.beta.threads.runs.create(
-        thread_id=thread_id,
-        assistant_id=assistant_id
-    )
-    return run.id
+    try:
+        run = client.beta.threads.runs.create(
+            thread_id=thread_id,
+            assistant_id=assistant_id,
+            instructions="Please provide your response in JSON format.",
+        )
+        logging.info(f"Started run with ID: {run.id} for assistant ID: {assistant_id}")
+        return run.id
+    except Exception as e:
+        logging.error(f"Failed to start assistant run: {e}", exc_info=True)
+        raise
 
 def get_run_status(thread_id: str, run_id: str):
-    """Get the status of a run."""
-    return client.beta.threads.runs.retrieve(thread_id=thread_id, run_id=run_id)
+    try:
+        run_status = client.beta.threads.runs.retrieve(thread_id=thread_id, run_id=run_id)
+        logging.info(f"Run status for run ID {run_id}: {run_status.status}")
+        return run_status
+    except Exception as e:
+        logging.error(f"Failed to retrieve run status for run ID {run_id}: {e}", exc_info=True)
+        raise
 
 def get_messages(thread_id: str):
-    """Get messages from the thread."""
-    return client.beta.threads.messages.list(thread_id=thread_id)
-
-def investigate_ip_address(ip_address: str) -> str:
-    """Use the IP Address Investigator's tools to investigate an IP address."""
-    reputation_data = check_ip_reputation(ip_address)
-    geolocation_data = get_geolocation(ip_address)
-    
-    combined_result = {
-        "reputation": reputation_data,
-        "geolocation": geolocation_data
-    }
-    
-    return json.dumps(combined_result)
+    try:
+        messages = client.beta.threads.messages.list(thread_id=thread_id)
+        logging.info(f"Retrieved {len(messages.data)} messages from thread {thread_id}")
+        return messages
+    except Exception as e:
+        logging.error(f"Failed to retrieve messages from thread {thread_id}: {e}", exc_info=True)
+        raise
 
 def handle_tool_calls(thread_id: str, run_id: str, tool_calls):
-    """Handle multiple tool calls."""
     tool_outputs = []
     for tool_call in tool_calls:
         function_name = tool_call.function.name
         arguments = json.loads(tool_call.function.arguments)
-        logger.info(f"Handling tool call: {function_name} with arguments {arguments}")
+        logging.info(f"Handling tool call: {function_name} with arguments: {arguments}")
         
-        if function_name == "investigate_ip_address":
-            ip_address = arguments["ip_address"]
-            logger.info(f"Investigating IP address: {ip_address}")
-            reputation_data = check_ip_reputation(ip_address)
-            geolocation_data = get_geolocation(ip_address)
-            combined_result = {
-                "reputation": reputation_data,
-                "geolocation": geolocation_data
-            }
-            tool_outputs.append({
-                "tool_call_id": tool_call.id,
-                "output": json.dumps(combined_result)
-            })
-            logger.info(f"Combined result: {combined_result}")
-        
-        elif function_name == "check_ip_reputation":
-            ip_address = arguments["ip_address"]
-            logger.info(f"Checking reputation for IP address: {ip_address}")
-            reputation_data = check_ip_reputation(ip_address)
-            tool_outputs.append({
-                "tool_call_id": tool_call.id,
-                "output": json.dumps(reputation_data)
-            })
-            logger.info(f"Reputation data: {reputation_data}")
-        
-        elif function_name == "get_geolocation":
-            ip_address = arguments["ip_address"]
-            logger.info(f"Getting geolocation for IP address: {ip_address}")
-            geolocation_data = get_geolocation(ip_address)
-            tool_outputs.append({
-                "tool_call_id": tool_call.id,
-                "output": json.dumps(geolocation_data)
-            })
-            logger.info(f"Geolocation data: {geolocation_data}")
-        
+        if function_name in FUNCTION_MAPPING:
+            try:
+                result = FUNCTION_MAPPING[function_name](**arguments)
+                tool_outputs.append({
+                    "tool_call_id": tool_call.id,
+                    "output": json.dumps(result)
+                })
+                logging.info(f"Tool call {function_name} completed successfully")
+            except Exception as e:
+                logging.error(f"Error in tool call {function_name}: {e}", exc_info=True)
+                tool_outputs.append({
+                    "tool_call_id": tool_call.id,
+                    "output": json.dumps({"error": str(e)})
+                })
         else:
-            logger.warning(f"Unknown function call: {function_name}")
-    
+            logging.warning(f"Unknown function call: {function_name}")
+            tool_outputs.append({
+                "tool_call_id": tool_call.id,
+                "output": json.dumps({"error": f"Unknown function {function_name}"})
+            })
+
     if tool_outputs:
-        logger.info(f"Submitting tool outputs: {tool_outputs}")
-        client.beta.threads.runs.submit_tool_outputs(
-            thread_id=thread_id,
-            run_id=run_id,
-            tool_outputs=tool_outputs
-        )
+        try:
+            client.beta.threads.runs.submit_tool_outputs(
+                thread_id=thread_id,
+                run_id=run_id,
+                tool_outputs=tool_outputs
+            )
+            logging.info("Tool outputs submitted successfully")
+        except Exception as e:
+            logging.error(f"Failed to submit tool outputs: {e}", exc_info=True)
 
-def step_3(investigation_plan: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Step 3: Coordinate the investigation using the lead agent and sub-assistants.
-    """
-    if not LEAD_ASSISTANT_ID:
-        return {"error": "Lead Assistant ID not found in environment variables"}
-
+def process_step(step: Dict[str, Any]) -> Dict[str, Any]:
+    logging.info(f"Processing step: {step['title']}")
+    
     thread = create_thread()
-    logger.info(f"Created thread with ID: {thread.id}")
-
-    # Add the investigation plan to the thread
-    add_message_to_thread(thread.id, f"Here's the investigation plan: {json.dumps(investigation_plan, indent=2)}")
-    add_message_to_thread(
-        thread.id,
-        "Please coordinate the investigation based on this plan and provide the results in JSON format. For steps with IOC type 'IP Address', use the investigate_ip_address function to delegate to the IP Address Investigator."
-    )
-    logger.info("Added investigation plan and instructions to thread.")
-
-    # Run the lead agent
-    run_id = run_assistant(LEAD_ASSISTANT_ID, thread.id)
-    logger.info(f"Started run with ID: {run_id}")
-
-    # Wait for the run to complete
+    add_message_to_thread(thread.id, json.dumps(step))
+    
+    run_id = run_assistant(IP_INVESTIGATOR_ID, thread.id)
+    
     while True:
         run_status = get_run_status(thread.id, run_id)
-        logger.info(f"Run status: {run_status.status}")
         if run_status.status == 'completed':
-            logger.info("Run completed.")
             break
         elif run_status.status == 'requires_action':
-            tool_calls = run_status.required_action.submit_tool_outputs.tool_calls
-            logger.info(f"Run requires action with tool calls: {[call.function.name for call in tool_calls]}")
-            handle_tool_calls(thread.id, run_id, tool_calls)
-        else:
-            logger.info("Run is still in progress.")
-        # Add a small delay to avoid excessive API calls
+            handle_tool_calls(thread.id, run_id, run_status.required_action.submit_tool_outputs.tool_calls)
         time.sleep(1)
-
-    # Get the investigation results
+    
     messages = get_messages(thread.id)
-    logger.info(f"Retrieved {len(messages.data)} messages from thread.")
-
-    # Extract the final report from the assistant's messages
-    investigation_results = {}
     for message in reversed(messages.data):
         if message.role == "assistant":
-            logger.info(f"Message content type: {type(message.content)}")
-            logger.info(f"Message content: {message.content}")
             try:
-                if isinstance(message.content, str):
-                    # Direct JSON string
-                    investigation_results = json.loads(message.content)
-                elif isinstance(message.content, list):
-                    # Extract text from TextContentBlock objects
-                    content_str = ''.join([
-                        segment.text.value for segment in message.content
-                        if hasattr(segment, 'text') and hasattr(segment.text, 'value')
-                    ])
-                    logger.info(f"Extracted content string: {content_str}")
-                    # Parse the JSON string
-                    investigation_results = json.loads(content_str)
-                else:
-                    # Fallback to summary
-                    content_str = str(message.content)
-                    investigation_results = {"summary": content_str}
-                logger.info(f"Final investigation results: {investigation_results}")
-                break
-            except (json.JSONDecodeError, AttributeError) as e:
-                logger.error(f"Failed to parse message content: {e}")
-                investigation_results = {"summary": "Failed to parse investigation results."}
-                break
+                return json.loads(message.content[0].text.value)
+            except json.JSONDecodeError:
+                logging.error("Failed to parse assistant's response as JSON")
+                return {"error": "Failed to parse response"}
+    
+    return {"error": "No response from assistant"}
 
-    return investigation_results
-
+def step_3(investigation_plan: Dict[str, Any]) -> Dict[str, Any]:
+    logging.info("Starting step 3 of the investigation process")
+    results = {}
+    
+    for step_key, step in investigation_plan.items():
+        results[step_key] = process_step(step)
+        
+        # Write intermediate results to report.txt
+        with open("report.txt", "a") as report_file:
+            report_file.write(f"\n--- {step_key}: {step['title']} ---\n")
+            json.dump(results[step_key], report_file, indent=2)
+            report_file.write("\n")
+        
+        logging.info(f"Completed {step_key}")
+    
+    logging.info("Completed step 3 of the investigation process")
+    return results
 
 if __name__ == "__main__":
-    # For testing purposes
-    sample_investigation_plan = {
+    # Sample investigation plan for testing
+    sample_plan = {
         "step_1": {
-            "title": "Investigate IP Address",
+            "title": "Analyze File Hash",
+            "ioc": "3A7F1E2B4C5D6E7F8G9H0I1J2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8A9B0C1D",
+            "ioc_type": "File Hash",
+            "tool": {"name": "get_virustotal_report"}
+        },
+        "step_2": {
+            "title": "Investigate IP Reputation",
             "ioc": "192.168.100.55",
-            "ioc_type": "IP Address"
+            "ioc_type": "IP Address",
+            "tool": {"name": "check_ip_reputation"}
         }
     }
-    results = step_3(sample_investigation_plan)
+    results = step_3(sample_plan)
     print(json.dumps(results, indent=2))

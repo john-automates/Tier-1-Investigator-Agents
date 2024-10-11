@@ -17,12 +17,18 @@ def create_investigation_plan(detection_data: Dict[str, Any]) -> Dict[str, Any]:
     try:
         prompt = f"""
         Based on the following detection information, create a detailed step-by-step plan for an OSINT (Open Source Intelligence) investigation of the Indicators of Compromise (IOCs). 
-        Focus on gathering information from publicly available sources before any active system investigation.
-        Each step should be specific, actionable, and focused on a particular aspect of OSINT investigation.
-
+        Focus on gathering information from publicly available sources before any active system investigation. You have access to the following tools:
+        - get_virustotal_report: Use this tool to get the VirusTotal report for a file hash.
+        - check_ip_reputation: Use this tool to check the reputation of an IP address.
+        - get_geolocation: Use this tool to get the geolocation of an IP address.
+        - advanced_search: Use this tool to perform advanced google searches take the top 3 links and summarize the results.
+        
+        Each step should be specific, actionable, and focused on a particular aspect of OSINT investigation. 
+        You can use the advanced_search tool to perform web searches and summarize the results, use this tool to gather information about the IOCs.
+        
         Detection Information:
         {json.dumps(detection_data, indent=2)}
-
+        
         Provide the OSINT investigation plan as a JSON object with the following structure:
         {{
             "step_1": {{
@@ -30,6 +36,9 @@ def create_investigation_plan(detection_data: Dict[str, Any]) -> Dict[str, Any]:
                 "description": "Detailed description of the step",
                 "ioc": "The specific IOC being investigated",
                 "ioc_type": "Type of the IOC (e.g., File Hash, IP Address, Process Name)",
+                "tool": {{
+                    "name": "Tool name to be used"
+                }},
                 "resources": [
                     {{
                         "name": "Resource name",
@@ -43,7 +52,7 @@ def create_investigation_plan(detection_data: Dict[str, Any]) -> Dict[str, Any]:
             }},
             // ... more steps as needed
         }}
-
+        
         Ensure the plan covers all relevant IOCs and focuses on OSINT techniques before any internal system investigation.
         Include steps for searching threat intelligence databases, analyzing the file hash, investigating the IP address, and any other relevant OSINT activities.
         Provide specific, real-world resources (with URLs) for each step.
