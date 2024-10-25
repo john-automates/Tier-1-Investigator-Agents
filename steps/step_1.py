@@ -70,7 +70,7 @@ def analyze_detection_info(detection_info: str) -> Dict[str, Any]:
     
     try:
         response = client.chat.completions.create(
-            model="gpt-4-0613",  # Changed from "gpt-4o-mini" to a valid model name
+            model="gpt-4-mini",  
             response_format={ "type": "json_object" },
             messages=[
                 {"role": "system", "content": "You are a helpful assistant that analyzes detection information and returns a structured JSON object."},
